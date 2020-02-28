@@ -1,0 +1,70 @@
+@font-face {font-family: 'FontAwesome';
+    src: url('/fonts/FontAwesomeSubset.eot');
+    src: url('/fonts/FontAwesomeSubset.eot?#iefix') format('embedded-opentype'),
+         url('/fonts/FontAwesomeSubset.woff2') format('woff2'),
+         url('/fonts/FontAwesomeSubset.woff') format('woff'),
+         url('/fonts/FontAwesomeSubset.ttf') format('truetype'),
+         url('/fonts/FontAwesomeSubset.svg#FontAwesomeSubset') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'LinBiolinum';
+    src: url('/fonts/LinBiolinum.eot');
+    src: url('/fonts/LinBiolinum.eot?#iefix') format('embedded-opentype'),
+         url('/fonts/LinBiolinum.woff2') format('woff2'),
+         url('/fonts/LinBiolinum.woff') format('woff');
+         url('/fonts/LinBiolinum.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Droid Sans Mono';
+    src: url('/fonts/DroidSansMono.eot');
+    src: url('/fonts/DroidSansMono.eot?#iefix') format('embedded-opentype'),
+         url('/fonts/DroidSansMono.woff2') format('woff2'),
+         url('/fonts/DroidSansMono.woff') format('woff');
+         url('/fonts/DroidSansMono.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Alegreya';
+    src: url('/fonts/Alegreya-Regular.eot');
+    src: url('/fonts/Alegreya-Regular.eot?#iefix') format('embedded-opentype'),
+         url('/fonts/Alegreya-Regular.woff2') format('woff2'),
+         url('/fonts/Alegreya-Regular.woff') format('woff');
+         url('/fonts/Alegreya-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Alegreya';
+    src: url('/fonts/Alegreya-Italic.eot');
+    src: url('/fonts/Alegreya-Italic.eot?#iefix') format('embedded-opentype'),
+         url('/fonts/Alegreya-Italic.woff2') format('woff2'),
+         url('/fonts/Alegreya-Italic.woff') format('woff');
+         url('/fonts/Alegreya-Italic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+}
+@font-face {
+    font-family: 'Alegreya Small Caps';
+    src: url('/fonts/AlegreyaSC-Regular.eot');
+    src: url('/fonts/AlegreyaSC-Regular.eot?#iefix') format('embedded-opentype'),
+         url('/fonts/AlegreyaSC-Regular.woff2') format('woff2'),
+         url('/fonts/AlegreyaSC-Regular.woff') format('woff');
+         url('/fonts/AlegreyaSC-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Alegreya Small Caps';
+    src: url('/fonts/AlegreyaSC-Italic.eot');
+    src: url('/fonts/AlegreyaSC-Italic.eot?#iefix') format('embedded-opentype'),
+         url('/fonts/AlegreyaSC-Italic.woff2') format('woff2'),
+         url('/fonts/AlegreyaSC-Italic.woff') format('woff');
+         url('/fonts/AlegreyaSC-Italic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+}
