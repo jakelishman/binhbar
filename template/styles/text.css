@@ -1,5 +1,5 @@
-.monospace {
-    font-family: monospace;
+.monospace, pre {
+    font-family: 'Droid Sans Mono', monospace;
 }
 
 a { color: #268bd2; }
@@ -87,7 +87,7 @@ ol.sidebar-link-list>li {
     padding-left: 0.2em;
 }
 #tags ul {
-    columns: 3;
+    columns: 2;
 }
 #bio {
     font-size: 0.9em;
@@ -122,8 +122,16 @@ ol.sidebar-link-list>li {
 #main-wrapper h1 {
     font-size: 2.5rem;
     display: block;
-    padding-bottom: 0.25em;
+    margin-top: 1.5rem;
+    padding-bottom: 0.25rem;
     border-bottom: 1px solid black;
+}
+#main-wrapper h1>a {
+    text-decoration: none;
+    color: inherit;
+}
+#main-wrapper h1>a:hover {
+    color: #2aa198;
 }
 .summary h2 {
     font-size 1.8rem;
@@ -134,8 +142,7 @@ ol.sidebar-link-list>li {
     color: black;
 }
 .article-title a:hover { color: #2aa198; }
-p.byline {
-    margin-top: -0.1rem;
+span.byline {
     color: #657b83;
     font-style: italic;
     font-size: 0.9em;
@@ -145,5 +152,53 @@ span.author {
     font-style: italic;
     font-variant: small-caps;
 }
-#next-front-page a:visited { color: #268bd2; }
-#next-front-page a:hover { color: #2aa198; }
+.page-link-separator { color: #657b83; }
+#list-page-navigation a:visited { color: #268bd2; }
+#list-page-navigation a:hover { color: #2aa198; }
+
+#article-text h2 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+p {
+    margin: 1rem 0;
+}
+#article-text p:first-child {
+    margin-top: 0;
+}
+
+code {
+    font-family: 'Droid Sans Mono', monospace;
+    font-size: 0.85rem;
+    padding-left: 3px;
+    padding-right: 3px;
+    background: #eee8d5;
+    border-radius: 5px;
+}
+.chl {
+    border-radius: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    overflow-x: auto;
+    margin: 1rem 0;
+}
+.chl>pre {
+    margin: 0;
+}
+.chl>pre>code {
+    display: block;
+    padding: 0;
+    background: none;
+    margin: 0;
+    font-weight: 300;
+}
+.chl .lineno {
+    user-select: none;
+    background: #073642;
+    padding-left: 0.5em;
+    margin-right: 1em;
+    color: #657b83;
+}
+.chl .lineno::before {
+    content: " ";
+}

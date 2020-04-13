@@ -32,6 +32,12 @@ body {
 @media (max-width: 812px) {
     #page-header h1, #tagline, #main-wrapper>main { padding: 0 15px; }
     #page-footer { padding-left: 15px; }
+    #main-wrapper>main { width: 100%; }
+    #sidebar { width: 100%; }
+}
+@media (min-width: 813px) {
+    #sidebar { width: 223px }
+    #main-wrapper>main {width: calc(100% - 223px)}
 }
 
 
@@ -102,14 +108,13 @@ body {
 
 #main-wrapper>main {
     background-color: #fdf6e3;
-    flex: 1000 590px;
-    justify-content: space-around;
+    /*flex: 1000 590px;*/
 }
 aside#sidebar {
     padding: 15px;
     padding-top: 30px;
     background-color: #eee8d5;
-    flex: 1 223px;
+    /*flex: 1 223px;*/
 }
 
 #sidebar-links h2 {
@@ -168,4 +173,30 @@ article.summary {
 }
 article.summary:nth-of-type(1) {
     margin-top: 0;
+}
+
+span.byline {
+    display: block;
+}
+h1 + span.byline {
+    position: relative;
+    top: -1.5rem;
+}
+h2 + span.byline {
+    position: relative;
+    top: 0;
+}
+
+p {
+    margin: 1rem 0;
+}
+
+.chl {
+    margin: 1rem 0;
+}
+
+#list-page-navigation {
+    display: block;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
 }
