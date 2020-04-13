@@ -312,15 +312,15 @@ def _html_list_footer(path, page, n_pages):
 
 def _deploy_article(article_id, articles, template):
     info = articles[article_id]
-    output_path = DEPLOY_DIRECTORY / info["output path"]
+    output_path = pathlib.Path(info["output path"])
     os.makedirs(output_path.parent, exist_ok=True)
-    shutil.copytree(info["input path"], output_path,
+    shutil.copytree(info["input path"], DEPLOY_DIRECTORY / output_path,
                     ignore=lambda *_: IGNORED_ARTICLE_FILES)
     output = template.substitute({
         'head_title': info["title"],
         'content': _html_article(article_id, articles),
     })
-    with open(output_path / "index.html", "w") as file:
+    with open(DEPLOY_DIRECTORY / output_path / "index.html", "w") as file:
         file.write(output)
 
 
@@ -340,7 +340,7 @@ def _deploy_list(article_infos, template, title, path, head_title=None):
     chunks = list(_chunk(chronological, 5))
     n_chunks = len(chunks)
     for n, articles in enumerate(chunks):
-        output_directory = DEPLOY_DIRECTORY / path
+        output_directory = pathlib.Path(path)
         if n > 0:
             output_directory = output_directory / "page" / str(n+1)
         header = ''.join([
@@ -356,8 +356,9 @@ def _deploy_list(article_infos, template, title, path, head_title=None):
             'head_title': head_title,
             'content': content,
         })
-        os.makedirs(output_directory, exist_ok=True)
-        with open(output_directory / "index.html", "w") as file:
+        deploy_directory = DEPLOY_DIRECTORY / output_directory
+        os.makedirs(deploy_directory, exist_ok=True)
+        with open(deploy_directory / "index.html", "w") as file:
             file.write(output)
 
 
