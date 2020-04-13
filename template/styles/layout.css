@@ -187,14 +187,6 @@ h2 + span.byline {
     top: 0;
 }
 
-p {
-    margin: 1rem 0;
-}
-
-.chl {
-    margin: 1rem 0;
-}
-
 #list-page-navigation {
     display: block;
     margin-top: 0.5em;
