@@ -10,6 +10,8 @@ import shutil
 import string
 import zlib
 
+from xml.etree import ElementTree as ET
+
 import markdown
 from markdown.extensions.codehilite import CodeHiliteExtension
 import unidecode
@@ -46,12 +48,55 @@ class _CodeHiliteExtension(CodeHiliteExtension):
         super(CodeHiliteExtension, self).__init__(**kwargs)
 
 
+class SummariseTreeprocessor(markdown.treeprocessors.Treeprocessor):
+    min_blocks = 1
+    max_blocks = 3
+
+    def _lower_heading_levels(self, root):
+        for n in [5, 4, 3, 2]:
+            old, new = f'h{n}', f'h{n+1}'
+            for element in root.iter(old):
+                element.tag = new
+
+    def _summarise(self, root):
+        blocks = ['p', 'ol', 'li']
+        headings = [f'h{n}' for n in range(1, 7)]
+        seen_blocks = 0
+        out = ET.Element(root.tag, root.attrib.copy())
+        for child in root:
+            if (child.tag in headings and seen_blocks >= self.min_blocks
+                    or seen_blocks >= self.max_blocks):
+                break
+            if child.tag in blocks:
+                seen_blocks += 1
+            out.append(child)
+        return out
+
+    def run(self, root):
+        self._lower_heading_levels(root)
+        return self._summarise(root)
+
+
+class SummariseExtension(markdown.extensions.Extension):
+    config = {}
+
+    def extendMarkdown(self, md):
+        summariser = SummariseTreeprocessor(md)
+        md.treeprocessors.register(summariser, 'summarise', 900)
+        md.registerExtension(self)
+
+
+def _markdown_extensions(summarise):
+    out = ['fenced_code', 'smarty', _CodeHiliteExtension()]
+    if summarise:
+        out.append(SummariseExtension())
+    return out
+
+
 _markdown = markdown.Markdown(output_format='html',
-                              extensions=[
-                                  'fenced_code',
-                                  _CodeHiliteExtension(),
-                                  'smarty',
-                              ])
+                              extensions=_markdown_extensions(False))
+_summarise = markdown.Markdown(output_format='html',
+                               extensions=_markdown_extensions(True))
 
 
 def cast_list(type_):
@@ -134,13 +179,6 @@ def _url_sanitise_title(info):
     )
 
 
-def _lower_heading_levels(html):
-    replacements = [("<h" + str(n), "<h" + str(n+1)) for n in [5, 4, 3, 2, 1]]
-    for old, new in replacements:
-        html = html.replace(old, new)
-    return html
-
-
 def add_article(path):
     path = pathlib.Path(path)
     if not (path.exists() and path.is_dir()):
@@ -164,8 +202,9 @@ def add_article(path):
     with codecs.open(path / CONTENT_FILE, mode="r", encoding="utf-8") as file:
         article = file.read()
     _markdown.reset()
+    _summarise.reset()
     info["markdown"] = _markdown.convert(article)
-    info["summary"] = _lower_heading_levels(info["markdown"])
+    info["summary"] = _summarise.convert(article)
     info["input path"] = str(path)
     date = datetime.datetime.fromisoformat(info["date"])
     if "output path" not in info:
