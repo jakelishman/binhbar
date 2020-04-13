@@ -67,14 +67,14 @@ Now `import build` will allow `build.read_code`, `build.write_code` and
 `build.compile` to be used, since all those names exist in the inner scope.
 However, `from build import *` will only give access to `read_code` and
 `write_code`, because the import system was told that that is "`__all__`" there
-is.  In pseudo-code using , the wildcard import is very similar to
+is.  In pseudo-code the wildcard import is very similar to
 
 ```python
 scope = globals()
 import build
 for name in build.__all__:
     scope[name] = getattr(build, name)
-del scope['build']
+del build
 ```
 
 For detection purposes, it is important that `__all__` is only accessed in the
