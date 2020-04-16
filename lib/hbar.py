@@ -24,12 +24,12 @@ CONTENT_FILE = pathlib.Path('article.md')
 STORE_FILE = pathlib.Path('.hbar-store')
 TEMPLATE_DIRECTORY = pathlib.Path('template')
 TEMPLATE_HTML = pathlib.Path('index.html')
-TEMPLATE_ABOUT_HTML = pathlib.Path('about/index.html')
+TEMPLATE_ABOUT_MD = pathlib.Path('about/index.md')
 DEPLOY_DIRECTORY = pathlib.Path('deploy')
 POSTS_DIRECTORY = pathlib.Path('posts')
 
 IGNORED_ARTICLE_FILES = [str(INFO_FILE), str(CONTENT_FILE), str(STORE_FILE)]
-IGNORED_TEMPLATE_FILES = [str(TEMPLATE_HTML), str(TEMPLATE_ABOUT_HTML)]
+IGNORED_TEMPLATE_FILES = [str(TEMPLATE_HTML), str(TEMPLATE_ABOUT_MD.name)]
 
 
 class _CodeHiliteExtension(CodeHiliteExtension):
@@ -420,11 +420,12 @@ def _deploy_tags(tags, articles, template):
 
 
 def _deploy_about(template):
-    with open(TEMPLATE_DIRECTORY / TEMPLATE_ABOUT_HTML, "r") as file:
+    with open(TEMPLATE_DIRECTORY / TEMPLATE_ABOUT_MD, "r") as file:
         about = file.read().strip()
+    _markdown.reset()
     output = template.substitute({
         'head_title': 'Jake Lishman',
-        'content': about,
+        'content': _markdown.convert(about),
     })
     output_directory = DEPLOY_DIRECTORY / "about"
     os.makedirs(output_directory, exist_ok=True)
