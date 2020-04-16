@@ -233,7 +233,7 @@ def tidy_up():
 
 def _canonical_abs(path):
     path = str(path).strip("/")
-    if not path:
+    if not path or path == ".":
         return "/"
     return "/" + path + "/"
 
@@ -260,7 +260,7 @@ def _html_byline(date):
 def _html_summary(info):
     title = ''.join([
         '<h2 class="article-title">',
-        '<a href="/', info['output path'], '/">',
+        '<a href="', _canonical_abs(info['output path']), '">',
         info['title'],
         '</a></h2>',
     ])
@@ -384,7 +384,7 @@ def _deploy_list(article_infos, template, title, path, head_title=None):
             output_directory = output_directory / "page" / str(n+1)
         header = ''.join([
             '<header>',
-            '<h1>', '<a href="/', str(output_directory), '/">',
+            '<h1>', '<a href="', _canonical_abs(output_directory), '">',
             title,
             '</a></h1></header>',
         ])
