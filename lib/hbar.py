@@ -308,7 +308,7 @@ def _html_recent_posts(articles, count):
 def _html_article(article_id, articles):
     info = articles[article_id]
     header = ''.join([
-        '<header>',
+        '<header id="main-header">',
         '<h1>', '<a href="', _canonical_abs(info['output path']), '">',
         info['title'],
         '</a>', '</h1>',
@@ -383,7 +383,7 @@ def _deploy_list(article_infos, template, title, path, head_title=None):
         if n > 0:
             output_directory = output_directory / "page" / str(n+1)
         header = ''.join([
-            '<header>',
+            '<header id="main-header">',
             '<h1>', '<a href="', _canonical_abs(output_directory), '">',
             title,
             '</a></h1></header>',

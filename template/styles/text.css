@@ -123,6 +123,7 @@ ol.sidebar-link-list>li {
     font-size: 2.5rem;
     display: block;
     margin-top: 1.5rem;
+    margin-bottom: 0.25rem;
     padding-bottom: 0.25rem;
     border-bottom: 1px solid black;
 }
@@ -132,6 +133,9 @@ ol.sidebar-link-list>li {
 }
 #main-wrapper h1>a:hover {
     color: #2aa198;
+}
+#main-header {
+    margin-bottom: 1.5rem;
 }
 .summary h2 {
     font-size 1.8rem;

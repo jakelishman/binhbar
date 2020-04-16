@@ -167,21 +167,20 @@ ol.sidebar-link-list>li {
 }
 
 article.summary {
-    margin-top: 2rem;
-    margin-bottom: 0rem;
-    border-bottom: 1px solid #93a1a177;
+    margin-bottom: 2rem;
+    border-top: 1px solid #93a1a177;
 }
 article.summary:nth-of-type(1) {
-    margin-top: 0;
+    border: none;
 }
 
 span.byline {
     display: block;
 }
-h1 + span.byline {
+/*h1 + span.byline {
     position: relative;
     top: -1.5rem;
-}
+}*/
 h2 + span.byline {
     position: relative;
     top: 0;
