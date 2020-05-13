@@ -238,6 +238,13 @@ def _canonical_abs(path):
     return "/" + path + "/"
 
 
+def _sanitise_tag(tag):
+    return "".join(
+        char for char in unidecode.unidecode(tag.lower()).replace(" ", "-")
+        if char.isalnum() or char == "-"
+    )
+
+
 def _html_byline(date):
     ordinal = 'th'
     if date.day in (1, 21, 31):
@@ -285,7 +292,7 @@ def _html_tag_list(tags):
     tags = sorted(((len(ids), tag) for tag, ids in tags.items()), reverse=True)
     return ''.join(
         ''.join([
-            '<li><a href="', _canonical_abs('/tags/' + tag), '">',
+            '<li><a href="', _canonical_abs('/tags/'+_sanitise_tag(tag)), '">',
             tag, ' <span class="tag-count">(', str(count), ')</span>',
             '</a></li>'
         ])
@@ -416,7 +423,7 @@ def _deploy_tags(tags, articles, template):
         _deploy_list((articles[article_id] for article_id in article_ids),
                      template,
                      "Posts tagged '" + tag + "'",
-                     "/tags/" + tag + "/")
+                     "/tags/" + _sanitise_tag(tag) + "/")
 
 
 def _deploy_about(template):
