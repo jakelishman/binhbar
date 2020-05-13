@@ -279,10 +279,14 @@ def _html_summary(info):
             '<a href="', _canonical_abs(info['output path']), '">',
             'Read more&#8230;</a></p></footer>',
         ])
+    environment = {
+        'article_root': _canonical_abs(info['output path']).rstrip('/'),
+    }
+    text = string.Template(info['summary']).safe_substitute(environment)
     return ''.join([
         '<article class="summary" itemscope>',
         '<header>', title, _html_byline(info['date']), '</header>',
-        '<div class="article-summary-text">', info['summary'], '</div>',
+        '<div class="article-summary-text">', text, '</div>',
         read_more,
         '</article>',
     ])
@@ -322,11 +326,14 @@ def _html_article(article_id, articles):
         _html_byline(info['date']),
         '</header>',
     ])
+    environment = {
+        'article_root': _canonical_abs(info['output path']).rstrip('/'),
+    }
+    text = string.Template(info['markdown']).safe_substitute(environment)
     return ''.join([
         '<article itemscope>',
         header,
-        '<div id="article-text">', info['markdown'], '</div>',
-        '<footer></footer>',
+        '<div id="article-text">', text, '</div>',
         '</article>',
     ])
 
