@@ -439,7 +439,9 @@ def deploy_site():
     summaries = {}
 
     with open(STORE_FILE, "r") as global_store:
-        article_locations = ast.literal_eval(global_store.read().strip())
+        lines = [l.strip() for l in global_store.readlines()]
+        lines = [l for l in lines if l and l[0] != '#']
+        article_locations = ast.literal_eval("".join(lines))
     for article_id, location in article_locations.items():
         with open(location / STORE_FILE, "r") as file:
             info = ast.literal_eval(file.read().strip())
