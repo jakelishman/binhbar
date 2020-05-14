@@ -5,7 +5,7 @@ if [[ -z $1 ]]; then
     exit 1
 fi
 
-directory="articles/$1"
+directory="$1"
 
 if [[ -d $directory ]]; then
     echo "Directory already exists: '$directory'." >&2
