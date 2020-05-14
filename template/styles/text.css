@@ -167,7 +167,7 @@ span.author {
 p {
     margin: 1rem 0;
 }
-#article-text p:first-child {
+#article-text>p:first-child {
     margin-top: 0;
 }
 
@@ -205,4 +205,20 @@ code {
 }
 .chl .lineno::before {
     content: " ";
+}
+
+blockquote {
+    border-radius: 5px;
+    background: #eee8d5;
+    border-left: 10px solid #c1c5bb;
+    padding: 1ex 0 1ex 1em;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+blockquote>p:first-child {
+    margin-top: 0;
+}
+blockquote>p:last-child {
+    margin-bottom: 0;
 }

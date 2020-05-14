@@ -59,7 +59,7 @@ class SummariseTreeprocessor(markdown.treeprocessors.Treeprocessor):
                 element.tag = new
 
     def _summarise(self, root):
-        blocks = ['p', 'ol', 'li']
+        blocks = ['p', 'ol', 'ul', 'blockquote']
         headings = [f'h{n}' for n in range(1, 7)]
         seen_blocks = 0
         out = ET.Element(root.tag, root.attrib.copy())
