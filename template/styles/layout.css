@@ -23,7 +23,7 @@ body {
 
 /* Content margins */
 #page-header h1, #tagline, #main-wrapper>main {
-    padding: 0 30px;
+    padding: 0 2.5rem;
 }
 #page-footer {
     padding-left: 30px;

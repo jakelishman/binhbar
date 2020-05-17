@@ -1,3 +1,6 @@
+body {
+    font-size: 1.1rem;
+}
 .monospace, pre {
     font-family: 'Droid Sans Mono', monospace;
 }
@@ -85,6 +88,7 @@ ol.sidebar-link-list {
 }
 ol.sidebar-link-list>li {
     padding-left: 0.2em;
+    margin: 0.75em 0;
 }
 #tags ul {
     columns: 2;
