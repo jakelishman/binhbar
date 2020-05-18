@@ -15,6 +15,10 @@ from xml.etree import ElementTree as ET
 import markdown
 from markdown.extensions.codehilite import CodeHiliteExtension
 import unidecode
+from css_html_js_minify import (
+    html_minify as _minify_html,
+    css_minify as _minify_css,
+)
 
 __all__ = ['add_all_articles', 'add_article', 'tidy_up', 'deploy_site']
 
@@ -231,6 +235,27 @@ def tidy_up():
     pass
 
 
+def _copy_minified_html(src, dest):
+    with open(src, "r") as input, open(dest, "w") as output:
+        output.write(_minify_html(input.read()))
+
+
+def _copy_minified_css(src, dest):
+    with open(src, "r") as input, open(dest, "w") as output:
+        output.write(_minify_css(input.read()))
+
+
+_FILE_COPY_FILTERS = {
+    '.html': _copy_minified_html,
+    '.css': _copy_minified_css,
+}
+
+
+def _copy_with_filter(src, dest):
+    extension = pathlib.Path(src).suffix.lower()
+    return _FILE_COPY_FILTERS.get(extension, shutil.copy2)(src, dest)
+
+
 def _canonical_abs(path):
     path = str(path).strip("/")
     if not path or path == ".":
@@ -374,7 +399,7 @@ def _deploy_article(article_id, articles, template):
         'content': _html_article(article_id, articles),
     })
     with open(DEPLOY_DIRECTORY / output_path / "index.html", "w") as file:
-        file.write(output)
+        file.write(_minify_html(output))
 
 
 def _chunk(sequence, n):
@@ -412,7 +437,7 @@ def _deploy_list(article_infos, template, title, path, head_title=None):
         deploy_directory = DEPLOY_DIRECTORY / output_directory
         os.makedirs(deploy_directory, exist_ok=True)
         with open(deploy_directory / "index.html", "w") as file:
-            file.write(output)
+            file.write(_minify_html(output))
 
 
 def _deploy_main_page(articles, template):
@@ -476,7 +501,8 @@ def deploy_site():
 
     shutil.rmtree(DEPLOY_DIRECTORY)
     shutil.copytree(TEMPLATE_DIRECTORY, DEPLOY_DIRECTORY,
-                    ignore=lambda *_: IGNORED_TEMPLATE_FILES)
+                    ignore=lambda *_: IGNORED_TEMPLATE_FILES,
+                    copy_function=_copy_with_filter)
     _deploy_main_page(articles, template)
     _deploy_articles(articles, template)
     _deploy_tags(tags, articles, template)
