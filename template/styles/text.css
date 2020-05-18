@@ -1,4 +1,5 @@
 body {
+    font-family: 'Alegreya', 'Linux Libertine', 'Times', 'Times New Roman', serif;
     font-size: 1.1rem;
 }
 .monospace, pre {
@@ -35,7 +36,7 @@ a:hover { color: #2aa198; }
     padding-bottom: 1rem;
 }
 h1, h2, h3, h4, h5, h6 {
-    font-family: 'LinBiolinum';
+    font-family: 'LinBiolinum', 'Optima', 'Candara', sans-serif;
     font-weight: normal;
 }
 
@@ -156,7 +157,7 @@ span.byline {
     font-size: 0.9em;
 }
 span.author {
-    font-family: 'Alegreya Small Caps';
+    font-family: 'Alegreya Small Caps', 'Linux Libertine', 'Times', 'Times New Roman', serif;
     font-style: italic;
     font-variant: small-caps;
 }
