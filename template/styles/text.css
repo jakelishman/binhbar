@@ -175,6 +175,12 @@ p {
     margin-top: 0;
 }
 
+#article-text hr {
+    border: 0;
+    height: 1px;
+    background: #93a1a188;
+}
+
 code {
     font-family: 'Droid Sans Mono', monospace;
     font-size: 0.85rem;

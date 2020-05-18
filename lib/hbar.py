@@ -60,12 +60,12 @@ class SummariseTreeprocessor(markdown.treeprocessors.Treeprocessor):
 
     def _summarise(self, root):
         blocks = ['p', 'ol', 'ul', 'blockquote']
-        headings = [f'h{n}' for n in range(1, 7)]
+        limiters = [f'h{n}' for n in range(1, 7)] + ['hr']
         seen_blocks = 0
         out = ET.Element(root.tag, root.attrib.copy())
         for child in root:
-            if (child.tag in headings and seen_blocks >= self.min_blocks
-                    or seen_blocks >= self.max_blocks):
+            if ((child.tag in limiters and seen_blocks >= self.min_blocks)
+                    or (seen_blocks >= self.max_blocks)):
                 break
             if child.tag in blocks:
                 seen_blocks += 1
