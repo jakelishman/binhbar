@@ -394,7 +394,6 @@ def _html_list_footer(path, page, n_pages):
 def _deploy_article(article_id, articles, template):
     info = articles[article_id]
     output_path = pathlib.Path(info["output path"])
-    os.makedirs(output_path.parent, exist_ok=True)
     shutil.copytree(info["input path"], DEPLOY_DIRECTORY / output_path,
                     ignore=lambda *_: IGNORED_ARTICLE_FILES)
     output = template.substitute({
@@ -502,7 +501,10 @@ def deploy_site():
         'recent_posts': _html_recent_posts(articles, count=5),
     }))
 
-    shutil.rmtree(DEPLOY_DIRECTORY)
+    try:
+        shutil.rmtree(DEPLOY_DIRECTORY)
+    except FileNotFoundError:
+        pass
     shutil.copytree(TEMPLATE_DIRECTORY, DEPLOY_DIRECTORY,
                     ignore=lambda *_: IGNORED_TEMPLATE_FILES,
                     copy_function=_copy_with_filter)
