@@ -20,6 +20,9 @@ from css_html_js_minify import (
     css_minify as _minify_css,
 )
 
+from . import katex
+
+
 __all__ = ['add_all_articles', 'add_article', 'tidy_up', 'deploy_site']
 
 ARTICLES_DIRECTORY = pathlib.Path('articles')
@@ -91,7 +94,7 @@ class SummariseExtension(markdown.extensions.Extension):
 
 
 def _markdown_extensions(summarise):
-    out = ['fenced_code', 'smarty', _CodeHiliteExtension()]
+    out = ['fenced_code', 'smarty', _CodeHiliteExtension(), katex.Extension()]
     if summarise:
         out.append(SummariseExtension())
     return out
