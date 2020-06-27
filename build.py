@@ -16,6 +16,7 @@ class AppendOperation(argparse.Action):
 _parser = argparse.ArgumentParser(
         epilog=("At least one operation must be specified."
                 " Operations will be performed in order of specification."))
+_parser.add_argument('--force', action='store_true')
 _parser.add_argument('--add', nargs=1, const=hbar.add_article,
                      metavar='article_dir', dest='operations',
                      action=AppendOperation)
@@ -34,7 +35,7 @@ def main():
         _parser.print_help()
         sys.exit(1)
     for operation in args.operations:
-        exit_code += operation()
+        exit_code += operation(vars=vars(args))
     sys.exit(exit_code)
 
 

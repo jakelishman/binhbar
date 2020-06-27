@@ -186,7 +186,7 @@ def _url_sanitise_title(info):
     )
 
 
-def add_article(path):
+def add_article(path, *, vars):
     path = pathlib.Path(path)
     if not (path.exists() and path.is_dir()):
         raise ValueError("Could not access directory " + path.name + ".")
@@ -197,7 +197,7 @@ def add_article(path):
         try:
             with open(store, "r") as f:
                 store_info = ast.literal_eval(f.read())
-            if store_info['checksum'] == checksum:
+            if store_info['checksum'] == checksum and not vars['force']:
                 return 0
         except (SyntaxError, OSError):
             pass
@@ -223,18 +223,18 @@ def add_article(path):
     return 0
 
 
-def add_all_articles():
+def add_all_articles(*, vars):
     base = ARTICLES_DIRECTORY
     exit_code = 0
     for article in glob.glob(str(base/'**'/INFO_FILE), recursive=True):
         try:
-            add_article(pathlib.Path(article).parent)
+            add_article(pathlib.Path(article).parent, vars=vars)
         except ValueError:
             exit_code += 1
     return exit_code
 
 
-def tidy_up():
+def tidy_up(*, vars):
     pass
 
 
@@ -474,7 +474,7 @@ def _deploy_about(template):
         file.write(output)
 
 
-def deploy_site():
+def deploy_site(*, vars):
     tags = collections.defaultdict(list)
     articles = {}
     summaries = {}
