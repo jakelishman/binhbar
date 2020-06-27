@@ -20,11 +20,14 @@ if [[ -z $title ]]; then
     exit 8
 fi
 
+id=$(date -Ins | sha256sum | head -c6)
+
 cat >"__article__.py" <<INFO_END
 {
-    "id": "$(date -Ins | sha256sum | head -c6)",
+    "id": "$id",
     "title": "$title",
     "date": "$(date -I)",
     "tags": [],
 }
 INFO_END
+touch "article.md"
