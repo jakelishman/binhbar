@@ -161,6 +161,9 @@ span.author {
     font-style: italic;
     font-variant: small-caps;
 }
+span.tagsline a { text-decoration: none; color: inherit}
+span.tagsline a:hover { color: #2aa198 !important; }
+
 .page-link-separator { color: #657b83; }
 #list-page-navigation a:visited { color: #268bd2; }
 #list-page-navigation a:hover { color: #2aa198; }

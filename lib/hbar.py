@@ -219,7 +219,24 @@ def _sanitise_tag(tag):
     )
 
 
-def _html_byline(date):
+def _html_tagsline(tags):
+    html_tags = ', '.join([
+        ''.join([
+            '<a href="', _canonical_abs('/tags/'+_sanitise_tag(tag)), '">',
+            tag,
+            '</a>',
+        ])
+        for tag in tags
+    ])
+    return ''.join([
+        '<span class="tagsline">',
+        'Tags: ',
+        html_tags,
+        '.</span>',
+    ])
+
+
+def _html_byline(date, tags):
     ordinal = 'th'
     if date.day in (1, 21, 31):
         ordinal = 'st'
@@ -234,7 +251,9 @@ def _html_byline(date):
         ' on the ',
         '<time datetime="', date.isoformat(), '">',
         day_string, ' of ', date.strftime('%B, %Y'),
-        '</time>.</span>',
+        '</time>. ',
+        _html_tagsline(tags),
+        '</span>',
     ])
 
 
@@ -259,7 +278,10 @@ def _html_summary(info):
     text = string.Template(info['summary']).safe_substitute(environment)
     return ''.join([
         '<article class="summary" itemscope>',
-        '<header>', title, _html_byline(info['date']), '</header>',
+        '<header>',
+        title,
+        _html_byline(info['date'], info['tags']),
+        '</header>',
         '<div class="article-summary-text">', text, '</div>',
         read_more,
         '</article>',
@@ -297,7 +319,7 @@ def _html_article(article_id, articles):
         '<h1>', '<a href="', _canonical_abs(info['output path']), '">',
         info['title'],
         '</a>', '</h1>',
-        _html_byline(info['date']),
+        _html_byline(info['date'], info['tags']),
         '</header>',
     ])
     environment = {
