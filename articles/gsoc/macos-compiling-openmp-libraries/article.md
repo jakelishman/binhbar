@@ -15,9 +15,11 @@ symbols such as `_GOMP_parallel`.  This is because `gcc` will call Apple's
 linker, which obviously will not know about the additional libraries.  We point
 `ld` to include the correct runtime directories with the `-rpath` linker
 directive and link the `gomp` library, setting for example
+
 ```bash
 $ LDFLAGS="-lgomp -Wl,-rpath,${GCCPREFIX}/lib/gcc/9"
 ```
+
 where `${GCCPREFIX}` is as defined above, and the version at the end will change
 depending on your `gcc` version.
 

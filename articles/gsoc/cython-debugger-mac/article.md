@@ -84,6 +84,7 @@ its Python components without complaint.
 ## Signing the debugger
 
 We can test the debugger with a simple C programme, for example
+
 ```c
 #include <stdio.h>
 
@@ -99,8 +100,10 @@ int main(int argc, const char **argv)
     return 0;
 }
 ```
+
 I have compiled this with debugging symbols `gcc -g` to `~/code/ctest/main`.
 If I try to run the debugger now, I get a kernel error
+
 ```
 $ gdb ~/code/ctest/main
 (gdb) run
@@ -120,12 +123,14 @@ Further, since Mojave (OS X 10.14), we have to grant `gdb` the
 `com.apple.security.cs.debugger` entitlement.  The system `lldb` is a thin
 pass-through to its debug server distributed within Xcode, so we can extract
 the necessary entitlements from there:
+
 ```
 $ codesign -d --entitlements :gdb-entitlements.xml /Applications/Xcode.app/Contents/SharedFrameworks/LLDB.framework/Resources/debugserver
 Executable=/Applications/Xcode.app/Contents/SharedFrameworks/LLDB.framework/Versions/A/Resources/debugserver
-
 ```
+
 The file `gdb-entitlements.xml` now looks like
+
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -136,10 +141,13 @@ The file `gdb-entitlements.xml` now looks like
 </dict>
 </plist>
 ```
+
 We code-sign the `gdb` executable with
+
 ```
 $ codesign --entitlements gdb-entitlements.xml -fs gdb-cert $(which gdb)
 ```
+
 where the `-f` option causes `codesign` to override any signatures that may
 already exist.  This operation may need to be run as root if the `gdb`
 executable is somewhere that isn't writeable.
@@ -153,6 +161,7 @@ process, we can just kill it: `sudo pkill taskgated`.
 
 In theory, `gdb` should be working now.  I can run `gdb ~/code/ctest/main`, and
 am greeted by a functioning interpreter:
+
 ```
 Reading symbols from main...
 Reading symbols from /Users/jake/code/ctest/main.dSYM/Contents/Resources/DWARF/main...
@@ -164,6 +173,7 @@ hello, world: 9, 36
 [Inferior 1 (process 5530) exited normally]
 (gdb) q
 ```
+
 It is odd to me that two threads are spawned for a single-threaded programme,
 but it still ran.  A larger problem is that occasionally on issuing the `run`
 command, `gdb` just completely hangs after only spawning the first thread.  To
@@ -172,6 +182,7 @@ following it with `kill -9` are.
 
 More pressing is that trying to load debugging symbols from a file causes an
 internal `gdb` error:
+
 ```
 $ gdb
 (gdb) file main
@@ -198,6 +209,7 @@ hello, world: 9, 36
 [Inferior 1 (process 5623) exited normally]
 (gdb)
 ```
+
 Oddly, pushing `gdb` to continue causes it to function as normal.
 Unfortunately, when running in batch mode (as `cygdb` does on loading), those
 questions will automatically be answered `y`, which currently makes `cygdb`
