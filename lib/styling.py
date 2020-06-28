@@ -2,6 +2,8 @@ from pygments import token
 from pygments.style import Style
 from pygments.formatters import get_formatter_by_name
 
+from . import highlight
+
 base03  = '#002b36'
 base02  = '#073642'
 base01  = '#586e75'
@@ -50,4 +52,4 @@ class SolarizedStyle(Style):
 
 if __name__ == "__main__":
     formatter = get_formatter_by_name('html', style=SolarizedStyle)
-    print(formatter.get_style_defs('.chl'))
+    print(formatter.get_style_defs('.' + highlight.CLASS))

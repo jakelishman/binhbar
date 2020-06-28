@@ -191,32 +191,38 @@ code {
     border-radius: 5px;
     display: inline-block;
 }
-.chl {
+pre.chl {
+    background: #002b36;
     border-radius: 10px;
-    padding-top: 10px;
-    padding-bottom: 10px;
     overflow-x: auto;
-    margin: 1rem 0;
-}
-.chl>pre {
     margin: 0;
+    display: flex;
 }
-.chl>pre>code {
+.chl code {
+    border-radius: 0;
+    padding-top: 5px;
+    padding-bottom: 5px;
     display: block;
-    padding: 0;
     background: none;
     margin: 0;
-    font-weight: 300;
 }
-.chl .lineno {
+.chl>code:first-child {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+.chl>code:last-child {
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+.chl .line-numbers {
+    text-align: right;
     user-select: none;
     background: #073642;
     padding-left: 0.5em;
-    margin-right: 1em;
+    padding-right: 0.5em;
+    margin-right: 0.2em;
+    min-width: 2.5em;
     color: #657b83;
-}
-.chl .lineno::before {
-    content: " ";
 }
 
 blockquote {

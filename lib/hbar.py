@@ -11,7 +11,6 @@ import string
 import zlib
 
 import markdown
-from markdown.extensions.codehilite import CodeHiliteExtension
 import unidecode
 from css_html_js_minify import (
     html_minify as _minify_html,
