@@ -2,9 +2,9 @@ import os
 import pathlib
 import re
 import subprocess
+from xml.etree import ElementTree as etree
 
 import markdown
-from xml.etree import ElementTree as etree
 
 
 _NODEBIN = pathlib.Path('node_modules/.bin')
@@ -39,8 +39,7 @@ class KaTeXBlock(markdown.blockprocessors.BlockProcessor):
         super().__init__(*args, **kwargs)
 
     def test(self, parent, block):
-        m = self._start.match(block)
-        return m
+        return self._start.match(block)
 
     def run(self, parent, blocks):
         original_first = blocks[0]
