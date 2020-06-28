@@ -26,14 +26,19 @@ class SolarizedStyle(Style):
     highlight_color = base02
     styles = {
         token.Token:               base0,
+
         token.Comment:             base00 + ' italic',
+        token.Comment.Preproc:     red + ' noitalic',
+        token.Comment.PreprocFile: violet + ' noitalic',
 
         token.Keyword:             green,
         token.Keyword.Constant:    cyan,
+        token.Keyword.Type:        yellow,
 
         token.Operator:            base0,
         token.Operator.Word:       green,
 
+        token.Name.Attribute:      yellow,
         token.Name.Builtin:        blue,
         token.Name.Builtin.Pseudo: base00 + ' italic',
         token.Name.Class:          magenta,
@@ -42,6 +47,7 @@ class SolarizedStyle(Style):
         token.Name.Exception:      yellow,
         token.Name.Function:       blue,
         token.Name.Namespace:      magenta,
+        token.Name.Tag:            green,
         token.Name.Variable:       base0,
 
         token.String:              cyan,
