@@ -10,8 +10,6 @@ import shutil
 import string
 import zlib
 
-from xml.etree import ElementTree as ET
-
 import markdown
 from markdown.extensions.codehilite import CodeHiliteExtension
 import unidecode
@@ -20,8 +18,7 @@ from css_html_js_minify import (
     css_minify as _minify_css,
 )
 
-from . import katex
-
+from . import katex, highlight, summarise
 
 __all__ = ['add_all_articles', 'add_article', 'tidy_up', 'deploy_site']
 
@@ -39,71 +36,21 @@ IGNORED_ARTICLE_FILES = [str(INFO_FILE), str(CONTENT_FILE), str(STORE_FILE)]
 IGNORED_TEMPLATE_FILES = [str(TEMPLATE_HTML), str(TEMPLATE_ABOUT_MD.name)]
 
 
-class _CodeHiliteExtension(CodeHiliteExtension):
-    def __init__(self, **kwargs):
-        # Overriding the value of 'linenums' to be 'inline'.  The extension
-        # __init__ method only allows True and False values unless the default
-        # is not None, True or False.
-        self.config = {
-            'linenums': ['inline', ""],
-            'guess_lang': [False, ""],
-            'css_class': ["chl", ""],
-            'pygments_style': ['solarized-dark', ''],
-            'noclasses': [False, ''],
-            'use_pygments': [True, '']
-        }
-        super(CodeHiliteExtension, self).__init__(**kwargs)
-
-
-class SummariseTreeprocessor(markdown.treeprocessors.Treeprocessor):
-    min_blocks = 1
-    max_blocks = 3
-
-    def _lower_heading_levels(self, root):
-        for n in [5, 4, 3, 2]:
-            old, new = f'h{n}', f'h{n+1}'
-            for element in root.iter(old):
-                element.tag = new
-
-    def _summarise(self, root):
-        blocks = ['p', 'ol', 'ul', 'blockquote']
-        limiters = [f'h{n}' for n in range(1, 7)] + ['hr']
-        seen_blocks = 0
-        out = ET.Element(root.tag, root.attrib.copy())
-        for child in root:
-            if ((child.tag in limiters and seen_blocks >= self.min_blocks)
-                    or (seen_blocks >= self.max_blocks)):
-                break
-            if child.tag in blocks:
-                seen_blocks += 1
-            out.append(child)
-        return out
-
-    def run(self, root):
-        self._lower_heading_levels(root)
-        return self._summarise(root)
-
-
-class SummariseExtension(markdown.extensions.Extension):
-    config = {}
-
-    def extendMarkdown(self, md):
-        summariser = SummariseTreeprocessor(md)
-        md.treeprocessors.register(summariser, 'summarise', 900)
-        md.registerExtension(self)
-
-
-def _markdown_extensions(summarise):
-    out = ['fenced_code', 'smarty', _CodeHiliteExtension(), katex.Extension()]
-    if summarise:
-        out.append(SummariseExtension())
+def _markdown_extensions(summary):
+    out = [
+        'smarty',
+        highlight.Extension(),
+        katex.Extension(),
+    ]
+    if summary:
+        out.append(summarise.Extension())
     return out
 
 
 _markdown = markdown.Markdown(output_format='html',
-                              extensions=_markdown_extensions(False))
+                              extensions=_markdown_extensions(summary=False))
 _summarise = markdown.Markdown(output_format='html',
-                               extensions=_markdown_extensions(True))
+                               extensions=_markdown_extensions(summary=True))
 
 
 def cast_list(type_):
