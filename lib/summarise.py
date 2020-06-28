@@ -4,7 +4,7 @@ from xml.etree import ElementTree as etree
 
 class SummariseTreeprocessor(markdown.treeprocessors.Treeprocessor):
     min_blocks = 1
-    max_blocks = 3
+    max_blocks = 5
 
     def _lower_heading_levels(self, root):
         for n in [5, 4, 3, 2]:
