@@ -81,7 +81,7 @@ the NumPy commit history) that the reference should instead be
 Despite all this, the Sphinx build process has gone smoothly for me, and
 running `make html` is fast and easy.  I have found that Sphinx likes to serve
 its static content from a folder called `_static`, which is somewhat a problem
-when using GitHub pages, which by default ignore all directory entries which
+when using GitHub pages, which by default ignores all directory entries which
 start with an underscore.  Fortunately there is a fix for this, but it is not
 really documented other than by users' complaints in GitHub issue trackers that
 things are broken.
