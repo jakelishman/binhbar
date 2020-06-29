@@ -52,8 +52,17 @@ class SolarizedStyle(Style):
 
         token.String:              cyan,
         token.String.Doc:          base00 + ' italic',
+        token.String.Escape:       orange,
 
         token.Number:              cyan,
+
+        token.Generic:             base0,
+        token.Generic.Deleted:     red,
+        token.Generic.Emph:        base0 + ' italic',
+        token.Generic.Heading:     orange,
+        token.Generic.Inserted:    green,
+        token.Generic.Strong:      base0 + ' bold',
+        token.Generic.Subheading:  orange,
     }
 
 if __name__ == "__main__":
