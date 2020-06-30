@@ -6,10 +6,10 @@ as part of my Google Summer of Code project, which has involved learning a lot
 more about the [Sphinx][sphinx] documentation tool, and a little bit of GitHub
 esoterica.
 
-Currently we don't have a completely plan for how this guide will be merged
-into the QuTiP documentation, and where exactly it will go, so for now it is
-hosted on [my own GitHub repository][my-devguide-repo].  I have also put up a
-properly rendered version on [a GitHub pages site linked to the
+Currently we don't have a complete plan for how this guide will be merged into
+the QuTiP documentation, and where exactly it will go, so for now it is hosted
+on [my own GitHub repository][my-devguide-repo].  I have also put up a properly
+rendered version on [a GitHub pages site linked to the
 repository][gh-pages-devguide].
 
 My Sphinx [`conf.py`][conf.py] file for this repository is not (at the time of
