@@ -1,4 +1,5 @@
 deploy/
 node_modules/
 .hbar-store
+.hbar-store_backup
 *.pyc
