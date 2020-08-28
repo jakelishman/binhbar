@@ -398,7 +398,7 @@ def _deploy_list(article_infos, environment, template, title, path,
     head_title = head_title or title
     chronological = sorted(article_infos,
                            key=lambda x: x['date'], reverse=True)
-    chunks = list(_chunk(chronological, 5))
+    chunks = list(_chunk(chronological, 10))
     n_chunks = len(chunks)
     for n, articles in enumerate(chunks):
         output_directory = pathlib.Path(path)
@@ -489,7 +489,7 @@ def deploy_site(*, vars):
         template = string.Template(file.read().strip())
     template = string.Template(template.safe_substitute({
         'tags': _html_tag_list(tags),
-        'recent_posts': _html_recent_posts(articles, count=5),
+        'recent_posts': _html_recent_posts(articles, count=10),
     }))
 
     try:
