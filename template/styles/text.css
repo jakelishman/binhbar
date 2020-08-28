@@ -198,7 +198,7 @@ pre.chl {
     background: #002b36;
     border-radius: 10px;
     overflow-x: auto;
-    margin: 0;
+    margin: 16px 0;
     display: flex;
 }
 .chl code {
