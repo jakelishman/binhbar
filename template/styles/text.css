@@ -125,7 +125,7 @@ ol.sidebar-link-list>li {
 
 
 #main-wrapper h1 {
-    font-size: 2.5rem;
+    font-size: 2.5em;
     display: block;
     margin-top: 1.5rem;
     margin-bottom: 0.25rem;
@@ -143,7 +143,7 @@ ol.sidebar-link-list>li {
     margin-bottom: 1.5rem;
 }
 .summary h2 {
-    font-size 1.8rem;
+    font-size 1.8em;
     margin-bottom: 0rem;
 }
 .article-title a {
@@ -169,8 +169,21 @@ span.tagsline a:hover { color: #2aa198 !important; }
 #list-page-navigation a:hover { color: #2aa198; }
 
 #article-text h2 {
-    margin-top: 2rem;
+    font-size: 1.7em;
+    margin-top: 2.5rem;
     margin-bottom: 1rem;
+}
+#article-text h3 {
+    font-size: 1.35em;
+    margin-top: 2.1rem;
+    margin-bottom: 0.75rem;
+    margin-left: 1rem;
+}
+#article-text h4 {
+    font-size: 1.15em;
+    margin-top: 1.6rem;
+    margin-bottom: 0.5rem;
+    margin-left: 2rem;
 }
 p {
     margin: 1rem 0;
