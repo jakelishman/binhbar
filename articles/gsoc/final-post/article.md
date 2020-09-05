@@ -169,7 +169,7 @@ that the dispatcher binds the inputs, extracts the data-layer types present,
 and then chooses the "closest" specialisation of its function.  If there is no
 exact specialisation, then it uses the conversion function `data.to` to convert
 the input into a matching type, so it can perform the operation.  There is far
-more information in [the pull request itself][gh-1388].
+more information in [the pull request itself][gh-1338].
 
 `data.to` provides conversions between all data types which make up the data
 layer.  Registering a type with `data.to` is sufficient to add it to the data
