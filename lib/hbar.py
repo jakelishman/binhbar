@@ -31,6 +31,7 @@ TEMPLATE_HTML = pathlib.Path('index.html')
 TEMPLATE_ABOUT_MD = pathlib.Path('about/index.md')
 DEPLOY_DIRECTORY = pathlib.Path('deploy')
 POSTS_DIRECTORY = pathlib.Path('posts')
+ABOUT_DIRECTORY = pathlib.Path('about')
 
 IGNORED_ARTICLE_FILES = [str(INFO_FILE), str(CONTENT_FILE), str(STORE_FILE)]
 IGNORED_TEMPLATE_FILES = [str(TEMPLATE_HTML), str(TEMPLATE_ABOUT_MD.name)]
@@ -447,20 +448,22 @@ def _deploy_about(environment, template):
     with open(TEMPLATE_DIRECTORY / TEMPLATE_ABOUT_MD, "r") as file:
         about = file.read().strip()
     _markdown.reset()
+    content = _markdown.convert(about)
     output = template.substitute({
         'head_title': 'Jake Lishman',
-        'content': _markdown.convert(about),
-        **environment,
+        'content': string.Template(content).safe_substitute(environment),
     })
-    output_directory = DEPLOY_DIRECTORY / "about"
+    output_directory = DEPLOY_DIRECTORY / ABOUT_DIRECTORY
     os.makedirs(output_directory, exist_ok=True)
     with open(output_directory / "index.html", "w") as file:
-        file.write(output)
+        file.write(_postprocess_html(output))
 
 
 def deploy_site(*, vars):
     tags = collections.defaultdict(list)
-    environment = {}
+    environment = {
+        'about': _canonical_abs(str(ABOUT_DIRECTORY)),
+    }
     articles = {}
     summaries = {}
 
