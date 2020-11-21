@@ -16,9 +16,9 @@ if not (_KATEX.is_file() and os.access(_KATEX, os.X_OK)):
 def tohtml(latex, inline):
     args = (_KATEX,) + (() if inline else ('-d',))
     result = subprocess.run(args, input=latex, text=True, capture_output=True,
-                            check=True)
+                            check=False)
     if result.returncode != 0:
-        raise OSError("KaTex failed: " + result.stderr)
+        raise OSError(f"KaTeX failed on input:\n\n{latex}\n\n{result.stderr}")
     return result.stdout.strip()
 
 
