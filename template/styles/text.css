@@ -262,6 +262,12 @@ blockquote>p:last-child {
     margin-bottom: 0;
 }
 
+main img {
+    max-width: 100%;
+    display: block;
+    margin: 0 auto;
+}
+
 
 .katex {
     font-size: 1em !important;
