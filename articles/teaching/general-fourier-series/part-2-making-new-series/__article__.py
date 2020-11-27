@@ -4,5 +4,5 @@
     "date": "2020-11-25T22:00",
     "tags": ["physics", "teaching"],
     "image": "preview.png",
-    "description": "Create and investigate series expansions with Jupyter notebooks and linear algebra",
+    "description": "Create and investigate series expansions with Jupyter notebooks and linear algebra.",
 }
