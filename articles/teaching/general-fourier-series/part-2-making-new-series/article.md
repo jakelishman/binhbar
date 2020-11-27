@@ -80,7 +80,7 @@ so we find that
     c_n = \frac{\langle f,\phi_n\rangle}{\langle\phi_n,\phi_n\rangle}.
 \]
 
-We should make sure that this is an _minimum_, not a maximum.  This is quite
+We should make sure that this is a _minimum_, not a maximum.  This is quite
 simple---since there's only one value, we know that this is the only extreme
 point and that if we added on some really large number to all the $`c_n`$ then
 the approximation would obviously be worse.  This makes the single extremum a
@@ -135,6 +135,7 @@ additional work we gained a whole new method of series expansion!
 In [the next part of this series][part3], we'll compare how this new Legendre
 series expansion behaves in comparison to the Fourier and Taylor series.
 
+[legendre]: https://en.wikipedia.org/wiki/Legendre_polynomials
 [trig-complete]: https://math.stackexchange.com/a/317004/206819
 [derivative-test]: https://mathworld.wolfram.com/SecondDerivativeTest.html
 [gram-schmidt]: https://en.wikipedia.org/wiki/Gram%E2%80%93Schmidt_process
