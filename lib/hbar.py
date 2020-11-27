@@ -81,6 +81,8 @@ INFO_OPTIONAL = {
     "short title": str,
     "edits": cast_list(str),
     "related": cast_list(str),
+    "image": str,
+    "description": str,
 }
 INFO_COMPUTED = {
     "checksum", "markdown", "summary", "output path", "input path"
@@ -218,11 +220,12 @@ def _copy_with_filter(src, dest):
     return _FILE_COPY_FILTERS.get(extension, shutil.copy2)(src, dest)
 
 
-def _canonical_abs(path):
+def _canonical_abs(path, site=False):
+    base = "https://binhbar.com/" if site else "/"
     path = str(path).strip("/")
     if not path or path == ".":
-        return "/"
-    return "/" + path + "/"
+        return base
+    return base + path + "/"
 
 
 def _sanitise_tag(tag):
@@ -230,6 +233,24 @@ def _sanitise_tag(tag):
         char for char in unidecode.unidecode(tag.lower()).replace(" ", "-")
         if char.isalnum() or char == "-"
     )
+
+
+def _html_meta(info, article, title=None, path=None):
+    og_meta = r'<meta property="og:{}" content="{}">'
+    title = title or info.get("short title", info["title"])
+    path = _canonical_abs(path if path is not None else info["output path"],
+                          site=True)
+    parts = [
+        og_meta.format('title', title),
+        og_meta.format('url',  path),
+        og_meta.format('type', 'article' if article else 'website'),
+        og_meta.format('locale', 'en_GB'),
+    ]
+    if 'description' in info:
+        parts.append(og_meta.format('description', info['description']))
+    if 'image' in info:
+        parts.append(og_meta.format('image', path + info['image']))
+    return "".join(parts)
 
 
 def _html_tagsline(tags):
@@ -379,6 +400,7 @@ def _deploy_article(article_id, articles, environment, template):
                     ignore=lambda *_: IGNORED_ARTICLE_FILES)
     output = template.substitute({
         'head_title': info["title"],
+        'meta': _html_meta(info, article=True),
         'content': _html_article(article_id, environment, articles),
     })
     with open(DEPLOY_DIRECTORY / output_path / "index.html", "w") as file:
@@ -394,7 +416,7 @@ def _chunk(sequence, n):
 
 
 def _deploy_list(article_infos, environment, template, title, path,
-                 head_title=None):
+                 head_title=None, og_title=None):
     path = path.strip("/")
     head_title = head_title or title
     chronological = sorted(article_infos,
@@ -417,6 +439,8 @@ def _deploy_list(article_infos, environment, template, title, path,
         content = ''.join([header, content, footer])
         output = template.substitute({
             'head_title': head_title,
+            'meta': _html_meta({}, article=False, title=og_title or title,
+                               path=path),
             'content': content,
         })
         deploy_directory = DEPLOY_DIRECTORY / output_directory
@@ -427,7 +451,7 @@ def _deploy_list(article_infos, environment, template, title, path,
 
 def _deploy_main_page(articles, environment, template):
     _deploy_list(articles.values(), environment, template, "Recent posts", "/",
-                 head_title="Jake Lishman")
+                 head_title="Jake Lishman", og_title="Blog of Jake Lishman")
 
 
 def _deploy_articles(articles, environment, template):
@@ -449,8 +473,10 @@ def _deploy_about(environment, template):
         about = file.read().strip()
     _markdown.reset()
     content = _markdown.convert(about)
+    path = _canonical_abs(str(ABOUT_DIRECTORY))
     output = template.substitute({
         'head_title': 'Jake Lishman',
+        'meta': _html_meta({}, article=False, title="Jake Lishman", path=path),
         'content': string.Template(content).safe_substitute(environment),
     })
     output_directory = DEPLOY_DIRECTORY / ABOUT_DIRECTORY
