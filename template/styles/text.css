@@ -273,6 +273,6 @@ main img {
     font-size: 1em !important;
 }
 .katex-display {
-    overflow-x: scroll;
+    overflow-x: auto;
     overflow-y: hidden;
 }
