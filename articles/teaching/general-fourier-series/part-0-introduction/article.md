@@ -61,9 +61,10 @@ is, there's probably nothing new for you in the next part.
 
 The [next article of this series][part1] runs through the all the background
 maths for this part of the seminar, including some linear algebra results that
-the students learned in their first year at university, and then covers the
+the students learned in their first year at university.  The rest of the series
+covers how to produce the arbitrary series expansions, then looks at the
 results I hoped the students would discover by playing around with the
-notebooks.
+interactive notebook.
 
 [fons-prize]: https://www.imperial.ac.uk/natural-sciences/education-and-teaching/fons-annual-prizes-for-excellence/
 [legendre]: https://en.wikipedia.org/wiki/Legendre_polynomials

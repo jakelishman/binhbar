@@ -180,10 +180,13 @@ every other element.  The $`\{\bm i,\,\bm j,\,\bm k\}`$ basis above is also an
 example of this in its vector space.  These bases are called (imaginatively)
 "orthogonal bases".
 
+These concepts of "orthogonality" and a vector-space "basis" are all we need to
+define a whole family of series expansions.  The [next article in this
+series][part2] will cover that, and then we'll moved on to comparing the
+different series expansions we find.
 
 [inner-product]: https://en.wikipedia.org/wiki/Inner_product_space
 [cauchy-schwarz]: https://en.wikipedia.org/wiki/Cauchy%E2%80%93Schwarz_inequality
-
 
 ---
 
