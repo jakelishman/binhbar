@@ -10,11 +10,11 @@ closer to reality; I use classical optimal control theory coupled with fast
 numerical methods to design gates that are robust against real-world errors,
 even when conditions aren't perfect.
 
-I also contribute a lot of code to [QuTiP][qutip] ([GitHub page][qutip-gh]), a
-major quantum simulation library written in Python.  I have been heavily
-involved in designing and writing the new data-layer types and multiple dispatch
-system that will be coming in QuTiP 5.0, in Python, Cython and a little bit of
-C++.
+I'm a maintainer and on the admin team of [QuTiP][qutip] ([GitHub
+page][qutip-gh]), a major quantum simulation library written in Python.  I have
+been heavily involved in designing and writing the new data-layer types and
+multiple dispatch system that will be coming in QuTiP 5.0, in Python, Cython and
+a little bit of C++.
 
 [qi]: https://www.imperial.ac.uk/quantum-engineering-science-technology/research/quantum-information/
 [ions]: http://www.imperial.ac.uk/ion-trapping
