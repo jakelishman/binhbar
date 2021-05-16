@@ -42,7 +42,7 @@ Papers which have been published by a journal such as the Physical Review are co
 
   1. "_Trapped-ion entangling gates robust against qubit frequency errors_" by
      Jake Lishman and Florian Mintert;
-     [Physical Review Research **2**, 033117][Lishman2020] (open access),
+     [Physical Review Research **2**, 033117 (2020)][Lishman2020] (open access),
      [preprint][Lishman2020pre], [direct][Lishman2020direct].
 
 [Sameti2021]: https://doi.org/10.1103/PhysRevA.103.052603
