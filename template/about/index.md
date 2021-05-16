@@ -20,29 +20,34 @@ a little bit of C++.
 [ions]: http://www.imperial.ac.uk/ion-trapping
 [flo]: https://www.imperial.ac.uk/people/f.mintert
 [richard]: https://www.imperial.ac.uk/people/r.thompson
-[qutip]: http://qutip.org/
+[qutip]: https://qutip.org/
 [qutip-gh]: https://github.com/qutip/qutip
 
 
 ## Publications
 
-Papers which have been published by a journal such as the Physical Review are
-copyright by the respective publisher, even if you get the file from my site's
-direct link.
+For each of my publications, you can find the journal and preprint links below.
+I have also hosted a version of each here on my website, under the "direct" links.
+These are always the most recent version that I retain the rights to distribute; for a lot of journals, this is exactly the same as the published version.
 
-### 2020
+Papers which have been published by a journal such as the Physical Review are copyright by the respective publisher, even if you get the file from my site.
+
+### 2021
 
   1. "_Strong-coupling quantum logic of trapped ions_" by Mahdi Sameti, Jake
      Lishman, and Florian Mintert;
-     [preprint][Sameti2020pre], [direct][Sameti2020direct].
+     [Physical Review A **103**, 052603 (2021)][Sameti2021], [preprint][Sameti2021pre], [direct][Sameti2021direct].
+
+### 2020
 
   1. "_Trapped-ion entangling gates robust against qubit frequency errors_" by
      Jake Lishman and Florian Mintert;
-     [Phys. Rev. Research **2** 033117][Lishman2020] (open access),
+     [Physical Review Research **2**, 033117][Lishman2020] (open access),
      [preprint][Lishman2020pre], [direct][Lishman2020direct].
 
-[Sameti2020pre]: https://arxiv.org/abs/2003.11718
-[Sameti2020direct]: ${about}/direct_sameti2020.pdf
+[Sameti2021]: https://doi.org/10.1103/PhysRevA.103.052603
+[Sameti2021pre]: https://arxiv.org/abs/2003.11718
+[Sameti2021direct]: ${about}/direct_sameti2021.pdf
 
 [Lishman2020]: https://doi.org/10.1103/PhysRevResearch.2.033117
 [Lishman2020pre]: https://arxiv.org/abs/2004.07253
