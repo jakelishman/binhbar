@@ -1,0 +1,5 @@
+certifi==2020.12.5
+css-html-js-minify==2.5.5
+Markdown==3.3.4
+Pygments==2.9.0
+Unidecode==1.2.0
