@@ -82,6 +82,7 @@ INFO_OPTIONAL = {
     "edits": cast_list(str),
     "related": cast_list(str),
     "image": str,
+    "image_alt": str,
     "description": str,
 }
 INFO_COMPUTED = {
@@ -235,21 +236,44 @@ def _sanitise_tag(tag):
     )
 
 
-def _html_meta(info, article, title=None, path=None):
-    og_meta = r'<meta property="og:{}" content="{}">'
-    title = title or info.get("short title", info["title"])
+def _meta_tag(name, content, attribute='name'):
+    return rf'<meta {attribute}="{name}" content="{content}">'
+
+
+def _html_meta_opengraph(article, title, path, description, image):
+    image_path, image_alt = image
+    image_path = _canonical_abs(image_path, site=True).rstrip('/')
+    parts = [
+        _meta_tag('og:title', title, 'property'),
+        _meta_tag('og:url',  path, 'property'),
+        _meta_tag('og:type', 'article' if article else 'website', 'property'),
+        _meta_tag('og:locale', 'en_GB', 'property'),
+        _meta_tag('og:image', image_path, 'property'),
+        _meta_tag('og:image:alt', image_alt, 'property'),
+        _meta_tag('twitter:card', 'summary_large_image', 'name'),
+        _meta_tag('twitter:site', '@binhbar', 'name'),
+        _meta_tag('twitter:creator', '@binhbar', 'name'),
+    ]
+    if description:
+        parts.append(_meta_tag('og:description', description, 'property'))
+    return parts
+
+
+def _html_meta(info, article, title=None, path=None, description=None):
     path = _canonical_abs(path if path is not None else info["output path"],
                           site=True)
-    parts = [
-        og_meta.format('title', title),
-        og_meta.format('url',  path),
-        og_meta.format('type', 'article' if article else 'website'),
-        og_meta.format('locale', 'en_GB'),
-    ]
-    if 'description' in info:
-        parts.append(og_meta.format('description', info['description']))
+    title = title or info.get("short title", info["title"])
+    description = description or info.get('description', None)
     if 'image' in info:
-        parts.append(og_meta.format('image', path + info['image']))
+        image = path + info['image']
+        alt = info.get('image_alt', description)
+    else:
+        image = '/images/preview.png'
+        alt = "Title card for /bin/&#x127; and photograph of Jake Lishman"
+    parts = _html_meta_opengraph(article, title, path, description, (image, alt))
+    parts.append(_meta_tag('title', title))
+    if description:
+        parts.append(_meta_tag('description', description))
     return "".join(parts)
 
 
@@ -393,14 +417,15 @@ def _html_list_footer(path, page, n_pages):
     return ''.join(['<span id="list-page-navigation">', links, '</span>'])
 
 
-def _deploy_article(article_id, articles, environment, template):
+def _deploy_article(article_id, articles, environment, template,
+                    description=None):
     info = articles[article_id]
     output_path = pathlib.Path(info["output path"])
     shutil.copytree(info["input path"], DEPLOY_DIRECTORY / output_path,
                     ignore=lambda *_: IGNORED_ARTICLE_FILES)
     output = template.substitute({
         'head_title': info["title"],
-        'meta': _html_meta(info, article=True),
+        'meta': _html_meta(info, article=True, description=description),
         'content': _html_article(article_id, environment, articles),
     })
     with open(DEPLOY_DIRECTORY / output_path / "index.html", "w") as file:
@@ -416,7 +441,7 @@ def _chunk(sequence, n):
 
 
 def _deploy_list(article_infos, environment, template, title, path,
-                 head_title=None, og_title=None):
+                 head_title=None, meta_title=None, description=None):
     path = path.strip("/")
     head_title = head_title or title
     chronological = sorted(article_infos,
@@ -439,8 +464,10 @@ def _deploy_list(article_infos, environment, template, title, path,
         content = ''.join([header, content, footer])
         output = template.substitute({
             'head_title': head_title,
-            'meta': _html_meta({}, article=False, title=og_title or title,
-                               path=path),
+            'meta': _html_meta(
+                {}, article=False, title=meta_title or title,
+                path=path, description=description,
+            ),
             'content': content,
         })
         deploy_directory = DEPLOY_DIRECTORY / output_directory
@@ -450,8 +477,13 @@ def _deploy_list(article_infos, environment, template, title, path,
 
 
 def _deploy_main_page(articles, environment, template):
+    description = " ".join([
+        "PhD student in quantum physics and a lead developer of QuTiP.",
+        "Posts about quantum software development and trapped-ion quantum computing.",
+    ])
     _deploy_list(articles.values(), environment, template, "Recent posts", "/",
-                 head_title="Jake Lishman", og_title="Blog of Jake Lishman")
+                 head_title="Jake Lishman", meta_title="Blog of Jake Lishman",
+                 description=description)
 
 
 def _deploy_articles(articles, environment, template):
