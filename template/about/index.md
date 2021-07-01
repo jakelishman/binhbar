@@ -37,7 +37,7 @@ Papers which have been published by a journal such as the Physical Review are co
   - "_Certifying multilevel coherence in the motional state of a trapped ion_" by Ollie Corfield&#42;, Jake Lishman&#42;, Chungsun Lee, Jacopo Mosca Toba, George Porter, Johannes M. Heinrich, Simon C. Webster, Florian Mintert, and Richard C. Thompson; [arXiv:2106.12939][Corfield2021pre].
   - "_Strong-coupling quantum logic of trapped ions_" by Mahdi Sameti, Jake Lishman, and Florian Mintert; [Physical Review A **103**, 052603 (2021)][Sameti2021], [arXiv:2003.11718][Sameti2021pre], [direct][Sameti2021direct].
 
-[Corfield2021pre]: https//arxiv.org/abs/2106.12939
+[Corfield2021pre]: https://arxiv.org/abs/2106.12939
 [Corfield2021direct]: ${about}/direct_corfield2021.pdf
 
 [Sameti2021]: https://doi.org/10.1103/PhysRevA.103.052603
