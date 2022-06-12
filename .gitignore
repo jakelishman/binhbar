@@ -1,5 +1,6 @@
 deploy/
 node_modules/
+venv/
 .hbar-store
 .hbar-store_backup
 *.pyc
