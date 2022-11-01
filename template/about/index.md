@@ -1,17 +1,17 @@
 # [About me](${about})
 
-I'm Jake Lishman, a theoretical physics PhD student in the [Quantum Information][qi] and [Ion Trapping][ions] groups at Imperial College London in the UK, under [Prof.  Florian Mintert][flo] and [Prof. Richard Thompson][richard].
+I'm Jake Lishman, a research software developer at IBM Quantum.
+Almost all of [my work is open source][me-gh].
+You'll see me most often as a maintainer of [Qiskit Terra][terra-gh] and a language designer of [OpenQASM 3][oq3].
+These days I primarily work in Python, Rust and C++, but I've written plenty of pure C, Cython, Mathematica and F# in the past as well.
 
-My PhD work has been on making ion-trap gates for quantum computers a little bit
-closer to reality; I use classical optimal control theory coupled with fast
-numerical methods to design gates that are robust against real-world errors,
-even when conditions aren't perfect.
+I did a PhD in the [Quantum Information][qi] and [Ion Trapping][ions] groups at Imperial College London in the UK, under [Prof.  Florian Mintert][flo] and [Prof. Richard Thompson][richard], and am expecting to sit the viva in late October 2022.
+My PhD work was on making ion-trap gates for quantum computers a little bit closer to reality.
+I used classical optimal control theory coupled with fast numerical methods to design gates that are robust against real-world errors, even when conditions aren't perfect.
 
-I'm a maintainer and on the admin team of [QuTiP][qutip] ([GitHub
-page][qutip-gh]), a major quantum simulation library written in Python.  I have
-been heavily involved in designing and writing the new data-layer types and
-multiple dispatch system that will be coming in QuTiP 5.0, in Python, Cython and
-a little bit of C++.
+I got my start in open-source software working on [QuTiP][qutip] ([GitHub page][qutip-gh]), a major quantum simulation library.
+My most major user-facing contributions were designing and writing the multiple-dispatch system for the new data layer of QuTiP 5, and upgrading our sparse-matrix arthimetic algorithms.
+I was a core admin and maintainer from summer 2020 until July 2021 (when I started at IBM Quantum), and while I remain involved with the project, I'm no longer as active.
 
 [qi]: https://www.imperial.ac.uk/quantum-engineering-science-technology/research/quantum-information/
 [ions]: http://www.imperial.ac.uk/ion-trapping
@@ -19,6 +19,9 @@ a little bit of C++.
 [richard]: https://www.imperial.ac.uk/people/r.thompson
 [qutip]: https://qutip.org/
 [qutip-gh]: https://github.com/qutip/qutip
+[me-gh]: https://github.com/jakelishman
+[terra-gh]: https://github.com/Qiskit/qiskit-terra
+[oq3]: https://openqasm.github.io
 
 
 ## Publications
@@ -34,9 +37,10 @@ Papers which have been published by a journal such as the Physical Review are co
 
 ### 2021
 
-  - "_Certifying multilevel coherence in the motional state of a trapped ion_" by Ollie Corfield&#42;, Jake Lishman&#42;, Chungsun Lee, Jacopo Mosca Toba, George Porter, Johannes M. Heinrich, Simon C. Webster, Florian Mintert, and Richard C. Thompson; [arXiv:2106.12939][Corfield2021pre].
+  - "_Certifying multilevel coherence in the motional state of a trapped ion_" by Ollie Corfield&#42;, Jake Lishman&#42;, Chungsun Lee, Jacopo Mosca Toba, George Porter, Johannes Heinrich, Simon Webster, Florian Mintert, and Richard C. Thompson; [PRX Quantum **2**, 040359 (2021)][Corfield2021], [arXiv:2106.12939][Corfield2021pre], [direct][Corfield2021direct].
   - "_Strong-coupling quantum logic of trapped ions_" by Mahdi Sameti, Jake Lishman, and Florian Mintert; [Physical Review A **103**, 052603 (2021)][Sameti2021], [arXiv:2003.11718][Sameti2021pre], [direct][Sameti2021direct].
 
+[Corfield2021]: https://journals.aps.org/prxquantum/abstract/10.1103/PRXQuantum.2.040359
 [Corfield2021pre]: https://arxiv.org/abs/2106.12939
 [Corfield2021direct]: ${about}/direct_corfield2021.pdf
 

@@ -478,7 +478,7 @@ def _deploy_list(article_infos, environment, template, title, path,
 
 def _deploy_main_page(articles, environment, template):
     description = " ".join([
-        "PhD student in quantum physics and a lead developer of QuTiP.",
+        "Research software developer at IBM Quantum.",
         "Posts about quantum software development and trapped-ion quantum computing.",
     ])
     _deploy_list(articles.values(), environment, template, "Recent posts", "/",
