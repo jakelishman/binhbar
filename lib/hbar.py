@@ -452,6 +452,48 @@ def _html_article(article_id, state):
         _html_byline(info['date'], info['tags']),
         '</header>',
     ])
+
+    def link(article_id):
+        info = state.article_info(article_id)
+        return ''.join([
+            f'<a href="{_canonical_abs(info["output path"])}">',
+            info.get("short title", info["title"]),
+            '</a>',
+        ])
+
+    def tag_item(tag):
+        older = state.seek_in_tag(tag, article_id, -1)
+        newer = state.seek_in_tag(tag, article_id, 1)
+        if older is None and newer is None:
+            return ''
+        return ''.join([
+            '<section class="tag-nav">',
+            '<h3>',
+            f'<a href="{_canonical_abs("/tags/" + _sanitise_tag(tag))}">',
+            tag,
+            '</a>',
+            '</h3>',
+            '<div class="tag-nav-float">',
+            '<section class="tag-nav-older">',
+            '' if older is None else link(older),
+            '</section>',
+            '<section class="tag-nav-newer">',
+            '' if newer is None else link(newer),
+            '</section>',
+            '</div>',
+            '</section>',
+        ])
+
+    related = ''.join(tag_item(tag) for tag in info["tags"])
+    if related:
+        footer = ''.join([
+            '<footer id="main-footer">',
+            '<h2>Related posts</h2>',
+            related,
+            '</footer>',
+        ])
+    else:
+        footer = ''
     text = string.Template(info['markdown']).safe_substitute({
         'article': state.environment['article_' + article_id],
         **state.environment,
@@ -460,6 +502,7 @@ def _html_article(article_id, state):
         '<article itemscope>',
         header,
         '<div id="article-text">', text, '</div>',
+        footer,
         '</article>',
     ])
 
@@ -563,7 +606,7 @@ def _deploy_tags(state):
     for tag in state.tags():
         _deploy_list(state.articles_by_tag(tag),
                      state,
-                     "Posts tagged '" + tag + "'",
+                     f"Posts tagged ‘{tag}’",
                      state.environment['tag_' + _sanitise_tag(tag)])
 
 

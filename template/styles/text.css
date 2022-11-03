@@ -190,6 +190,22 @@ main h4 {
     margin-bottom: 0.5rem;
     margin-left: 2rem;
 }
+
+#main-footer h2 {
+    margin-top: 1.5rem;
+}
+.tag-nav h3 {
+    font-size: 1em;
+    margin-top: 1.6rem;
+    margin-bottom: 0.4rem;
+    margin-left: 0;
+}
+.tag-nav h3>a {
+    text-decoration: none;
+    color: black;
+}
+.tag-nav h3>a:hover { color: #2aa198; }
+
 p {
     margin: 1rem 0;
 }
