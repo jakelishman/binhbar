@@ -3,7 +3,6 @@ import codecs
 import collections
 import datetime
 import glob
-import itertools
 import os
 import pathlib
 import re
@@ -55,6 +54,79 @@ _summarise = markdown.Markdown(output_format='html',
 
 _url_tidyup_href = re.compile(r'href\s*=\s*(['"'"r'"])(.*?)\1')
 _url_tidyup_slash = re.compile(r'([^:])/+')
+
+
+class SiteState:
+    def __init__(self, store_file, template_file):
+        self.environment = {
+            'about': _canonical_abs(str(ABOUT_DIRECTORY)),
+        }
+        self._summaries = {}
+        self._tags = collections.defaultdict(list)
+        self._tag_indices = {}
+
+        articles = {}
+        with open(STORE_FILE, "r") as global_store:
+            lines = [line.strip() for line in global_store.readlines()]
+            lines = [line for line in lines if line and line[0] != '#']
+            article_locations = ast.literal_eval("".join(lines))
+        for article_id, location in article_locations.items():
+            with open(location / STORE_FILE, "r") as file:
+                info = ast.literal_eval(file.read().strip())
+            info['date'] = datetime.datetime.fromisoformat(info['date'])
+            articles[article_id] = info
+            self.environment['article_' + article_id] =\
+                _canonical_abs(info['output path'])
+        # Guaranteed to remain sorted by age now, so will remain so in future
+        # iterations, like making the tags.
+        self._articles = {
+            id: articles[id]
+            for id in sorted(articles, key=lambda id: articles[id]["date"])
+        }
+
+        for article_id, info in articles.items():
+            for tag in info["tags"]:
+                self._tags[tag].append(article_id)
+        for tag, articles in self._tags.items():
+            safe_tag = _sanitise_tag(tag)
+            self.environment['tag_' + safe_tag] = "/tags/" + safe_tag + "/"
+            self._tag_indices[tag] = {id: i for i, id in enumerate(articles)}
+
+        for article_id, info in self._articles.items():
+            self._summaries[article_id] = _html_summary(info, self.environment)
+
+        with open(TEMPLATE_DIRECTORY / TEMPLATE_HTML, "r") as file:
+            template = string.Template(file.read().strip())
+        self._template = string.Template(template.safe_substitute({
+            'tags': _html_tag_list(self._tags),
+            'recent_posts': _html_recent_posts(self._articles.values(), count=10),
+        }))
+
+    def articles_by_tag(self, tag: str):
+        """A sorted iterable from oldest to newest articles in a tag."""
+        return tuple(self._tags[tag])
+
+    def seek_in_tag(self, tag: str, base_article: str, offset: int):
+        base = self._tag_indices[tag][base_article]
+        index = base + offset
+        if 0 <= index < len(self._tags[tag]):
+            return self._tags[tag][index]
+        return None
+
+    def summary(self, article):
+        return self._summaries[article]
+
+    def apply_template(self, replacements):
+        return self._template.substitute(replacements)
+
+    def tags(self):
+        return self._tags.keys()
+
+    def article_ids(self):
+        return self._articles.keys()
+
+    def article_info(self, article_id):
+        return self._articles[article_id]
 
 
 def _url_tidyup(text):
@@ -358,7 +430,7 @@ def _html_tag_list(tags):
     )
 
 
-def _html_recent_posts(articles, count):
+def _html_recent_posts(article_infos, count):
     def item(info):
         return ''.join([
             '<li>',
@@ -366,12 +438,12 @@ def _html_recent_posts(articles, count):
             info['title'],
             '</a>', '</li>',
         ])
-    recent = sorted(articles.values(), key=lambda x: x['date'], reverse=True)
+    recent = sorted(article_infos, key=lambda x: x['date'], reverse=True)
     return ''.join(item(info) for info in recent[:count])
 
 
-def _html_article(article_id, environment, articles):
-    info = articles[article_id]
+def _html_article(article_id, state):
+    info = state.article_info(article_id)
     header = ''.join([
         '<header id="main-header">',
         '<h1>', '<a href="', _canonical_abs(info['output path']), '">',
@@ -381,8 +453,8 @@ def _html_article(article_id, environment, articles):
         '</header>',
     ])
     text = string.Template(info['markdown']).safe_substitute({
-        'article': environment['article_' + article_id],
-        **environment,
+        'article': state.environment['article_' + article_id],
+        **state.environment,
     })
     return ''.join([
         '<article itemscope>',
@@ -417,16 +489,15 @@ def _html_list_footer(path, page, n_pages):
     return ''.join(['<span id="list-page-navigation">', links, '</span>'])
 
 
-def _deploy_article(article_id, articles, environment, template,
-                    description=None):
-    info = articles[article_id]
+def _deploy_article(article_id, state, description=None):
+    info = state.article_info(article_id)
     output_path = pathlib.Path(info["output path"])
     shutil.copytree(info["input path"], DEPLOY_DIRECTORY / output_path,
                     ignore=lambda *_: IGNORED_ARTICLE_FILES)
-    output = template.substitute({
+    output = state.apply_template({
         'head_title': info["title"],
         'meta': _html_meta(info, article=True, description=description),
-        'content': _html_article(article_id, environment, articles),
+        'content': _html_article(article_id, state),
     })
     with open(DEPLOY_DIRECTORY / output_path / "index.html", "w") as file:
         file.write(_postprocess_html(output))
@@ -434,18 +505,16 @@ def _deploy_article(article_id, articles, environment, template,
 
 def _chunk(sequence, n):
     sequence = tuple(sequence)
-    n_chunks = (len(sequence) + (n-1)) // n
-    iterator = iter(sequence)
-    for _ in [None]*n_chunks:
-        yield tuple(itertools.islice(iterator, n))
+    return [sequence[ptr : ptr + n] for ptr in range(0, len(sequence), n)]
 
 
-def _deploy_list(article_infos, environment, template, title, path,
+def _deploy_list(article_ids, state, title, path,
                  head_title=None, meta_title=None, description=None):
     path = path.strip("/")
     head_title = head_title or title
-    chronological = sorted(article_infos,
-                           key=lambda x: x['date'], reverse=True)
+    chronological = sorted(
+        article_ids, key=lambda x: state.article_info(x)['date'], reverse=True
+    )
     chunks = list(_chunk(chronological, 10))
     n_chunks = len(chunks)
     for n, articles in enumerate(chunks):
@@ -458,11 +527,10 @@ def _deploy_list(article_infos, environment, template, title, path,
             title,
             '</a></h1></header>',
         ])
-        content = ''.join(_html_summary(article, environment)
-                          for article in articles)
+        content = ''.join(state.summary(article) for article in articles)
         footer = _html_list_footer(path, n+1, n_chunks)
         content = ''.join([header, content, footer])
-        output = template.substitute({
+        output = state.apply_template({
             'head_title': head_title,
             'meta': _html_meta(
                 {}, article=False, title=meta_title or title,
@@ -476,40 +544,39 @@ def _deploy_list(article_infos, environment, template, title, path,
             file.write(_postprocess_html(output))
 
 
-def _deploy_main_page(articles, environment, template):
+def _deploy_main_page(state):
     description = " ".join([
         "Research software developer at IBM Quantum.",
         "Posts about quantum software development and trapped-ion quantum computing.",
     ])
-    _deploy_list(articles.values(), environment, template, "Recent posts", "/",
+    _deploy_list(state.article_ids(), state, "Recent posts", "/",
                  head_title="Jake Lishman", meta_title="Blog of Jake Lishman",
                  description=description)
 
 
-def _deploy_articles(articles, environment, template):
-    for article_id in articles:
-        _deploy_article(article_id, articles, environment, template)
+def _deploy_articles(state):
+    for article_id in state.article_ids():
+        _deploy_article(article_id, state)
 
 
-def _deploy_tags(tags, articles, environment, template):
-    for tag, article_ids in tags.items():
-        _deploy_list((articles[article_id] for article_id in article_ids),
-                     environment,
-                     template,
+def _deploy_tags(state):
+    for tag in state.tags():
+        _deploy_list(state.articles_by_tag(tag),
+                     state,
                      "Posts tagged '" + tag + "'",
-                     environment['tag_' + _sanitise_tag(tag)])
+                     state.environment['tag_' + _sanitise_tag(tag)])
 
 
-def _deploy_about(environment, template):
+def _deploy_about(state):
     with open(TEMPLATE_DIRECTORY / TEMPLATE_ABOUT_MD, "r") as file:
         about = file.read().strip()
     _markdown.reset()
     content = _markdown.convert(about)
     path = _canonical_abs(str(ABOUT_DIRECTORY))
-    output = template.substitute({
+    output = state.apply_template({
         'head_title': 'Jake Lishman',
         'meta': _html_meta({}, article=False, title="Jake Lishman", path=path),
-        'content': string.Template(content).safe_substitute(environment),
+        'content': string.Template(content).safe_substitute(state.environment),
     })
     output_directory = DEPLOY_DIRECTORY / ABOUT_DIRECTORY
     os.makedirs(output_directory, exist_ok=True)
@@ -518,40 +585,7 @@ def _deploy_about(environment, template):
 
 
 def deploy_site(*, vars):
-    tags = collections.defaultdict(list)
-    environment = {
-        'about': _canonical_abs(str(ABOUT_DIRECTORY)),
-    }
-    articles = {}
-    summaries = {}
-
-    with open(STORE_FILE, "r") as global_store:
-        lines = [line.strip() for line in global_store.readlines()]
-        lines = [line for line in lines if line and line[0] != '#']
-        article_locations = ast.literal_eval("".join(lines))
-    for article_id, location in article_locations.items():
-        with open(location / STORE_FILE, "r") as file:
-            info = ast.literal_eval(file.read().strip())
-        info['date'] = datetime.datetime.fromisoformat(info['date'])
-        articles[article_id] = info
-        environment['article_' + article_id] =\
-            _canonical_abs(info['output path'])
-
-    for article_id, info in articles.items():
-        for tag in info["tags"]:
-            tags[tag].append(article_id)
-    for tag in tags:
-        safe_tag = _sanitise_tag(tag)
-        environment['tag_' + safe_tag] = "/tags/" + safe_tag + "/"
-    for article_id, info in articles.items():
-        summaries[article_id] = _html_summary(info, environment)
-
-    with open(TEMPLATE_DIRECTORY / TEMPLATE_HTML, "r") as file:
-        template = string.Template(file.read().strip())
-    template = string.Template(template.safe_substitute({
-        'tags': _html_tag_list(tags),
-        'recent_posts': _html_recent_posts(articles, count=10),
-    }))
+    state = SiteState(STORE_FILE, TEMPLATE_DIRECTORY / TEMPLATE_HTML)
 
     try:
         shutil.rmtree(DEPLOY_DIRECTORY)
@@ -560,8 +594,8 @@ def deploy_site(*, vars):
     shutil.copytree(TEMPLATE_DIRECTORY, DEPLOY_DIRECTORY,
                     ignore=lambda *_: IGNORED_TEMPLATE_FILES,
                     copy_function=_copy_with_filter)
-    _deploy_main_page(articles, environment, template)
-    _deploy_articles(articles, environment, template)
-    _deploy_tags(tags, articles, environment, template)
-    _deploy_about(environment, template)
+    _deploy_main_page(state)
+    _deploy_articles(state)
+    _deploy_tags(state)
+    _deploy_about(state)
     return 0
