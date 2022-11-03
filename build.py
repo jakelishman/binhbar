@@ -17,10 +17,10 @@ _parser = argparse.ArgumentParser(
         epilog=("At least one operation must be specified."
                 " Operations will be performed in order of specification."))
 _parser.add_argument('--force', action='store_true')
-_parser.add_argument('--add', nargs=1, const=hbar.add_article,
+_parser.add_argument('--update', nargs=1, const=hbar.update_article,
                      metavar='article_dir', dest='operations',
                      action=AppendOperation)
-_parser.add_argument('--add-all', nargs=0, const=hbar.add_all_articles,
+_parser.add_argument('--update-all', nargs=0, const=hbar.update_all_articles,
                      dest='operations', action=AppendOperation)
 _parser.add_argument('--tidy-up', nargs=0, const=hbar.tidy_up,
                      dest='operations', action=AppendOperation)

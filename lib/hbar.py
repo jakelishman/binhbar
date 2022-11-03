@@ -19,7 +19,7 @@ from css_html_js_minify import (
 
 from . import katex, highlight, summarise
 
-__all__ = ['add_all_articles', 'add_article', 'tidy_up', 'deploy_site']
+__all__ = ['update_all_articles', 'update_article', 'tidy_up', 'deploy_site']
 
 ARTICLES_DIRECTORY = pathlib.Path('articles')
 INFO_FILE = pathlib.Path('__article__.py')
@@ -220,7 +220,7 @@ def _url_sanitise_title(info):
     )
 
 
-def add_article(path, *, vars):
+def update_article(path, *, vars):
     path = pathlib.Path(path)
     if not (path.exists() and path.is_dir()):
         raise ValueError("Could not access directory " + path.name + ".")
@@ -257,12 +257,12 @@ def add_article(path, *, vars):
     return 0
 
 
-def add_all_articles(*, vars):
+def update_all_articles(*, vars):
     base = ARTICLES_DIRECTORY
     exit_code = 0
     for article in glob.glob(str(base/'**'/INFO_FILE), recursive=True):
         try:
-            add_article(pathlib.Path(article).parent, vars=vars)
+            update_article(pathlib.Path(article).parent, vars=vars)
         except ValueError:
             exit_code += 1
     return exit_code
