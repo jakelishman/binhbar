@@ -51,7 +51,7 @@ def tohtml(code, language, start_line=1):
         lexer = pygments.lexers.get_lexer_by_name('text')
     lines = list(_format_lines(lexer.get_tokens(code)))
     numbers = (
-        '<code class="line-numbers">'
+        '<code class="line-numbers" aria-hidden="true">'
         + "\n".join(str(n) for n in range(start_line, start_line + len(lines)))
         + '</code>'
     )
