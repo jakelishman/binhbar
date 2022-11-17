@@ -2,6 +2,7 @@ import ast
 import codecs
 import collections
 import datetime
+import enum
 import glob
 import os
 import pathlib
@@ -34,6 +35,25 @@ ABOUT_DIRECTORY = pathlib.Path('about')
 
 IGNORED_ARTICLE_FILES = [str(INFO_FILE), str(CONTENT_FILE), str(STORE_FILE)]
 IGNORED_TEMPLATE_FILES = [str(TEMPLATE_HTML), str(TEMPLATE_ABOUT_MD.name)]
+
+
+def _canonical_abs(path, site=False):
+    base = "https://binhbar.com/" if site else "/"
+    path = str(path).strip("/")
+    if not path or path == ".":
+        return base
+    return base + path + "/"
+
+
+class Tabs(enum.Enum):
+    Blog = enum.auto()
+    About = enum.auto()
+
+
+TAB_LIST = {
+    Tabs.Blog: ("Blog", _canonical_abs("/")),
+    Tabs.About: ("About me", _canonical_abs(str(ABOUT_DIRECTORY))),
+}
 
 
 def _markdown_extensions(summary):
@@ -293,14 +313,6 @@ def _copy_with_filter(src, dest):
     return _FILE_COPY_FILTERS.get(extension, shutil.copy2)(src, dest)
 
 
-def _canonical_abs(path, site=False):
-    base = "https://binhbar.com/" if site else "/"
-    path = str(path).strip("/")
-    if not path or path == ".":
-        return base
-    return base + path + "/"
-
-
 def _sanitise_tag(tag):
     return "".join(
         char for char in unidecode.unidecode(tag.lower()).replace(" ", "-")
@@ -329,6 +341,14 @@ def _html_meta_opengraph(article, title, path, description, image):
     if description:
         parts.append(_meta_tag('og:description', description, 'property'))
     return parts
+
+
+def _html_tabs(current_tab):
+    return "".join(
+        f'<li class="tab{" tab-current" if tab is current_tab else ""}">'
+        f'<a href="{TAB_LIST[tab][1]}">{TAB_LIST[tab][0]}</a></li>'
+        for tab in Tabs
+    )
 
 
 def _html_meta(info, article, title=None, path=None, description=None):
@@ -539,6 +559,7 @@ def _deploy_article(article_id, state, description=None):
                     ignore=lambda *_: IGNORED_ARTICLE_FILES)
     output = state.apply_template({
         'head_title': info["title"],
+        'tabs': _html_tabs(Tabs.Blog),
         'meta': _html_meta(info, article=True, description=description),
         'content': _html_article(article_id, state),
     })
@@ -575,6 +596,7 @@ def _deploy_list(article_ids, state, title, path,
         content = ''.join([header, content, footer])
         output = state.apply_template({
             'head_title': head_title,
+            'tabs': _html_tabs(Tabs.Blog),
             'meta': _html_meta(
                 {}, article=False, title=meta_title or title,
                 path=path, description=description,
@@ -618,6 +640,7 @@ def _deploy_about(state):
     path = _canonical_abs(str(ABOUT_DIRECTORY))
     output = state.apply_template({
         'head_title': 'Jake Lishman',
+        'tabs': _html_tabs(Tabs.About),
         'meta': _html_meta({}, article=False, title="Jake Lishman", path=path),
         'content': string.Template(content).safe_substitute(state.environment),
     })

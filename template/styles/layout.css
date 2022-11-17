@@ -69,6 +69,9 @@ body {
     height: 2.5rem;
     background-color: #073642;
 }
+.tab:hover {
+    background-color: #2aa198;
+}
 .tab-current {
     background-color: #6c71c4;
 }
