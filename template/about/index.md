@@ -5,24 +5,26 @@ Almost all of [my work is open source][me-gh].
 You'll see me most often as a maintainer of [Qiskit Terra][terra-gh] and a language designer of [OpenQASM 3][oq3].
 These days I primarily work in Python, Rust and C++, but I've written plenty of pure C, Cython, Mathematica and F# in the past as well.
 
-I did a PhD in the [Quantum Information][qi] and [Ion Trapping][ions] groups at Imperial College London in the UK, under [Prof.  Florian Mintert][flo] and [Prof. Richard Thompson][richard], and am expecting to sit the viva in late October 2022.
+I have a PhD from the [Quantum Information][qi] and [Ion Trapping][ions] groups at Imperial College London in the UK, under [Prof.  Florian Mintert][flo] and [Prof. Richard Thompson][richard].
 My PhD work was on making ion-trap gates for quantum computers a little bit closer to reality.
 I used classical optimal control theory coupled with fast numerical methods to design gates that are robust against real-world errors, even when conditions aren't perfect.
+You can find [a copy of my thesis here][thesis].
 
 I got my start in open-source software working on [QuTiP][qutip] ([GitHub page][qutip-gh]), a major quantum simulation library.
 My most major user-facing contributions were designing and writing the multiple-dispatch system for the new data layer of QuTiP 5, and upgrading our sparse-matrix arthimetic algorithms.
-I was a core admin and maintainer from summer 2020 until July 2021 (when I started at IBM Quantum), and while I remain involved with the project, I'm no longer as active.
+I was a core admin and maintainer from summer 2020 until July 2021, when I started at IBM Quantum.
+I'm largely inactive on QuTiP these days.
 
 [qi]: https://www.imperial.ac.uk/quantum-engineering-science-technology/research/quantum-information/
 [ions]: http://www.imperial.ac.uk/ion-trapping
 [flo]: https://www.imperial.ac.uk/people/f.mintert
 [richard]: https://www.imperial.ac.uk/people/r.thompson
+[thesis]: ${about}/thesis.pdf
 [qutip]: https://qutip.org/
 [qutip-gh]: https://github.com/qutip/qutip
 [me-gh]: https://github.com/jakelishman
 [terra-gh]: https://github.com/Qiskit/qiskit-terra
 [oq3]: https://openqasm.github.io
-
 
 ## Publications
 
