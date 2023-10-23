@@ -4,6 +4,7 @@ import collections
 import datetime
 import enum
 import glob
+import html
 import os
 import pathlib
 import re
@@ -33,16 +34,20 @@ DEPLOY_DIRECTORY = pathlib.Path('deploy')
 POSTS_DIRECTORY = pathlib.Path('posts')
 ABOUT_DIRECTORY = pathlib.Path('about')
 
+SITE = "https://binhbar.com"
+FEED_LOCATION = "atom.xml"
+
 IGNORED_ARTICLE_FILES = [str(INFO_FILE), str(CONTENT_FILE), str(STORE_FILE)]
 IGNORED_TEMPLATE_FILES = [str(TEMPLATE_HTML), str(TEMPLATE_ABOUT_MD.name)]
 
 
-def _canonical_abs(path, site=False):
-    base = "https://binhbar.com/" if site else "/"
+def _canonical_abs(path, site=False, file=False):
+    suffix = "" if file else "/"
+    base = f"{SITE if site else ''}/"
     path = str(path).strip("/")
     if not path or path == ".":
         return base
-    return base + path + "/"
+    return f"{base}{path}{suffix}"
 
 
 class Tabs(enum.Enum):
@@ -163,9 +168,16 @@ def cast_list(type_):
     return cast
 
 
+def _normalise_date(x):
+    iso = datetime.datetime.fromisoformat(x)
+    if iso.tzinfo is None:
+        iso = iso.astimezone(datetime.timezone.utc)
+    return iso.isoformat()
+
+
 INFO_NECESSARY = {
     "title": str,
-    "date": lambda x: datetime.datetime.fromisoformat(x).isoformat(),
+    "date": _normalise_date,
     "tags": cast_list(str),
     "id": str,
 }
@@ -650,6 +662,48 @@ def _deploy_about(state):
         file.write(_postprocess_html(output))
 
 
+def _make_feed_entry(state, article_id):
+    info = state.article_info(article_id)
+    path = _canonical_abs(info["output path"], site=True)
+    return "\n".join([
+        "<entry>",
+        f'<title>{info["title"]}</title>',
+        f'<link rel="alternate" href="{path}"/>',
+        f'<id>{path}</id>',
+        f'<updated>{info["date"].isoformat()}</updated>',
+        '<summary type="html">',
+        html.escape(info["summary"]),
+        '</summary>',
+        ''.join(f'<category term="{tag}"/>' for tag in info["tags"]),
+        '</entry>',
+    ])
+
+def _deploy_feed(state):
+    site_root = _canonical_abs("/", site=True)
+    now = datetime.datetime.now(tz=datetime.timezone.utc)
+    recent = sorted(
+        state.article_ids(), key=lambda x: state.article_info(x)['date'], reverse=True
+    )[:25]
+    header = "\n".join([
+        '<?xml version="1.0" encoding="utf-8"?>'
+        '<feed xmlns="http://www.w3.org/2005/Atom">'
+        '<title>/bin/hbar</title>'
+        '<subtitle>Blog of Jake Lishman</subtitle>'
+        f'<link href="{site_root}"/>'
+        f'<link rel="self" href="{SITE}/{FEED_LOCATION}"/>'
+        f'<id>{site_root}</id>'
+        f'<updated>{now.isoformat()}</updated>'
+        f'<author><name>Jake Lishman</name><uri>{site_root}</uri></author>'
+        '<category term="programming"/>'
+        '<category term="quantum computing"/>'
+        f'<icon>{_canonical_abs("images/favicon-128.png", file=True)}</icon>'
+    ])
+    with open(DEPLOY_DIRECTORY / FEED_LOCATION, "w") as file:
+        file.write(header)
+        for article_id in recent:
+            file.write(_make_feed_entry(state, article_id))
+        file.write("</feed>\n")
+
 def deploy_site(*, vars):
     state = SiteState(STORE_FILE, TEMPLATE_DIRECTORY / TEMPLATE_HTML)
 
@@ -664,4 +718,5 @@ def deploy_site(*, vars):
     _deploy_articles(state)
     _deploy_tags(state)
     _deploy_about(state)
+    _deploy_feed(state)
     return 0
