@@ -69,6 +69,8 @@ def _markdown_extensions(summary):
     ]
     if summary:
         out.append(summarise.Extension())
+    else:
+        out.append("footnotes")
     return out
 
 
