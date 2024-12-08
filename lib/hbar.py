@@ -668,6 +668,10 @@ def _deploy_about(state):
 def _make_feed_entry(state, article_id):
     info = state.article_info(article_id)
     path = _canonical_abs(info["output path"], site=True)
+    text = string.Template(info['summary']).safe_substitute({
+        'article': _canonical_abs(info['output path']).rstrip('/'),
+        **state.environment,
+    })
     return "\n".join([
         "<entry>",
         f'<title>{info["title"]}</title>',
@@ -675,7 +679,7 @@ def _make_feed_entry(state, article_id):
         f'<id>{path}</id>',
         f'<updated>{info["date"].isoformat()}</updated>',
         '<summary type="html">',
-        html.escape(info["summary"]),
+        html.escape(text),
         '</summary>',
         ''.join(f'<category term="{tag}"/>' for tag in info["tags"]),
         '</entry>',
