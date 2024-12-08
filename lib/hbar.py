@@ -26,7 +26,8 @@ __all__ = ['update_all_articles', 'update_article', 'tidy_up', 'deploy_site']
 ARTICLES_DIRECTORY = pathlib.Path('articles')
 INFO_FILE = pathlib.Path('__article__.py')
 CONTENT_FILE = pathlib.Path('article.md')
-STORE_FILE = pathlib.Path('.hbar-store')
+STORE_FILE = pathlib.Path('articles.py')
+METADATA_FILE = pathlib.Path('.hbar-store')
 TEMPLATE_DIRECTORY = pathlib.Path('template')
 TEMPLATE_HTML = pathlib.Path('index.html')
 TEMPLATE_ABOUT_MD = pathlib.Path('about/index.md')
@@ -37,7 +38,7 @@ ABOUT_DIRECTORY = pathlib.Path('about')
 SITE = "https://binhbar.com"
 FEED_LOCATION = "atom.xml"
 
-IGNORED_ARTICLE_FILES = [str(INFO_FILE), str(CONTENT_FILE), str(STORE_FILE)]
+IGNORED_ARTICLE_FILES = [str(INFO_FILE), str(CONTENT_FILE), str(METADATA_FILE)]
 IGNORED_TEMPLATE_FILES = [str(TEMPLATE_HTML), str(TEMPLATE_ABOUT_MD.name)]
 
 
@@ -93,12 +94,12 @@ class SiteState:
         self._tag_indices = {}
 
         articles = {}
-        with open(STORE_FILE, "r") as global_store:
+        with open(store_file, "r") as global_store:
             lines = [line.strip() for line in global_store.readlines()]
             lines = [line for line in lines if line and line[0] != '#']
             article_locations = ast.literal_eval("".join(lines))
         for article_id, location in article_locations.items():
-            with open(location / STORE_FILE, "r") as file:
+            with open(location / METADATA_FILE, "r") as file:
                 info = ast.literal_eval(file.read().strip())
             info['date'] = datetime.datetime.fromisoformat(info['date'])
             articles[article_id] = info
@@ -258,8 +259,8 @@ def update_article(path, *, vars):
     path = pathlib.Path(path)
     if not (path.exists() and path.is_dir()):
         raise ValueError("Could not access directory " + path.name + ".")
-    store = path / STORE_FILE
-    checksum = _checksum_directory(path, exclude=[STORE_FILE.name])
+    store = path / METADATA_FILE
+    checksum = _checksum_directory(path, exclude=[METADATA_FILE.name])
     store_info = None
     if store.exists():
         try:

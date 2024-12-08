@@ -42,7 +42,7 @@ touch "article.md"
 
 cd "$original" || exit 16
 
-store_file=".hbar-store"
+store_file="articles.py"
 
 if [[ ! -f "$store_file" ]]; then
     echo -e "{\n}" >"$store_file"
