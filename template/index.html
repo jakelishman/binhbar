@@ -17,6 +17,7 @@
         <link rel="icon" type="image/png" href="/images/favicon-32.png" sizes="32x32">
         <link rel="icon" type="image/png" href="/images/favicon-16.png" sizes="16x16">
         <link rel="license" href="#licence">
+        <link rel="alternate" type="application/atom+xml" title="/bin/&#x127;" href="${atom_feed}">
     </head>
     <body>
         <div class="colour-wrapper" id="header-colour-wrapper"><header class="content" id="page-header">
@@ -28,7 +29,7 @@
                     <li><a id="follow-github" href="https://www.github.com/jakelishman" title="See my code">g</a></li>
                     <li><a id="follow-linkedin" href="https://www.linkedin.com/in/jakelishman" title="Try to recruit me?">l</a></li>
                     <li><a id="follow-work" href="https://research.ibm.com/people/jake-lishman" title="View my work profile">a</a></li>
-                    <li><a id="follow-atom" href="/atom.xml" title="Subscribe to my Atom feed">r</a></li>
+                    <li><a id="follow-atom" href="${atom_feed}" title="Subscribe to my Atom feed">r</a></li>
                 </ul></div>
                 <nav id="main-nav"><ul>${tabs}</ul></nav>
             </div>
@@ -51,7 +52,7 @@
             <nav id="footer-nav">
                 <div class="footer-nav-section"><h2>Internal Links</h2><ul>
                     <li><a href="/">Blog</a></li><li><a href="/about/">About me</a></li>
-                    <li><a href="/atom.xml">Atom feed</a></li>
+                    <li><a href="${atom_feed}">Atom feed</a></li>
                 </ul></div>
                 <div class="footer-nav-section"><h2>External Links</h2><ul>
                     <li><a href="https://www.github.com/jakelishman">GitHub: jakelishman</a></li>

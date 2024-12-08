@@ -88,6 +88,7 @@ class SiteState:
     def __init__(self, store_file, template_file):
         self.environment = {
             'about': _canonical_abs(str(ABOUT_DIRECTORY)),
+            'atom_feed': _canonical_abs(FEED_LOCATION, site=True, file=True),
         }
         self._summaries = {}
         self._tags = collections.defaultdict(list)
@@ -145,7 +146,7 @@ class SiteState:
         return self._summaries[article]
 
     def apply_template(self, replacements):
-        return self._template.substitute(replacements)
+        return self._template.substitute({**self.environment, **replacements})
 
     def tags(self):
         return self._tags.keys()
@@ -697,7 +698,7 @@ def _deploy_feed(state):
         '<title>/bin/hbar</title>'
         '<subtitle>Blog of Jake Lishman</subtitle>'
         f'<link href="{site_root}"/>'
-        f'<link rel="self" href="{SITE}/{FEED_LOCATION}"/>'
+        f'<link rel="self" href="{_canonical_abs(FEED_LOCATION, site=True, file=True)}"/>'
         f'<id>{site_root}</id>'
         f'<updated>{now.isoformat()}</updated>'
         f'<author><name>Jake Lishman</name><uri>{site_root}</uri></author>'
